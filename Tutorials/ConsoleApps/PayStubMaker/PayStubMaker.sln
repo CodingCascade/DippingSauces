@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayStubMaker", "PayStubMaker\PayStubMaker.csproj", "{6A53538D-95A5-4C49-941F-017F6F8326CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A53538D-95A5-4C49-941F-017F6F8326CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A53538D-95A5-4C49-941F-017F6F8326CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A53538D-95A5-4C49-941F-017F6F8326CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A53538D-95A5-4C49-941F-017F6F8326CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8C50B63-FDB3-4112-8962-00A38298A828}
+	EndGlobalSection
+EndGlobal
