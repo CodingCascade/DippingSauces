@@ -1,0 +1,66 @@
+﻿@model DohFlo.Models.CreateTransactionViewModel
+@{
+    ViewData["Title"] = "Add Transaction";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post" class="row g-3">
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-4">
+        <label asp-for="AccountId" class="form-label"></label>
+        <slect asp-for="AccountId" class="form-select" asp-items="Model.Accounts">
+            <option value="">-- Select account --</option>
+        </slect>
+        <span class="text-danger" asp-validation-for="AccountId"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="PayeeId" class="form-label"></label>
+        <select asp-for="PayeeId" class="form-select" asp-itmes="Model.Payees">
+            <option value="">-- (optional Payee --</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
+            <option value="">-- (optional) Category--</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Amount" class="form-label"></label>
+        <input asp-for="Amount" class="form-control" />
+        <span class="text-danger" asp-validation-for="Amount"></span>
+    </div>
+
+    <div class="col-md-2">
+        <label asp-for="CurrencyCode" class="form-label"></label>
+        <input asp-for="CurrencyCode" class="form-control" maxlength="3" />
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Date" class="form-label"></label>
+        <input asp-for="Date" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-2 form-check" style="margin-top: 2.5rem;">
+        <input asp-for="IsPending" class="form-check-input" />
+        <label asp-for="IsPending" class="form-check-label"></label>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+</form>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }

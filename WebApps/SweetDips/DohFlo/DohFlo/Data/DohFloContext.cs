@@ -56,8 +56,8 @@ namespace DohFlo.Data
                 LastName = "Kets",
                 DisplayName = "Boolie Kets",
                 Email = "boolie@dohflo.com",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = new DateTime(2026, 4, 26, 15, 55, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 4, 26, 15, 55, 0, DateTimeKind.Utc)
             });
         }
 
