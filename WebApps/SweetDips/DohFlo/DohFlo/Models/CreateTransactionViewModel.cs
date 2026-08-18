@@ -6,7 +6,7 @@ namespace DohFlo.Models
     public class CreateTransactionViewModel
     {
         // Fields user will fill
-        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an account")]
         public int AccountId { get; set; }
         public int? PayeeId { get; set; }
         public int? CategoryId { get; set; }
