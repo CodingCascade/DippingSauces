@@ -1,0 +1,58 @@
+﻿@model DohFlo.Models.CreateAccountViewModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<h1>Create Account</h1>
+<p class="text-muted">
+    Add an account before entering transactions.
+</p>
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="col-md-6">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Type" class="form-label"></label>
+        <select asp-for="Type" class="form-select">
+            <option value="">-- Select Account Type --</option>
+            <option>Checking</option>
+            <option>Savings</option>
+            <option>Credit Card</option>
+            <option>Cash</option>
+            <option>Investment</option>
+            <option>Loan</option>
+            <option>Other</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-8">
+        <label asp-for="Institution" class="form-label"></label>
+        <input asp-for="Institution" class="form-control" />
+        <span asp-validation-for="Institution" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="CurrencyCode" class="form-label"></label>
+        <input asp-for="CurrencyCode" class="form-control" mxlength="3" />
+        <span asp-validation-for="CurrencyCode" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">
+            Create Account
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

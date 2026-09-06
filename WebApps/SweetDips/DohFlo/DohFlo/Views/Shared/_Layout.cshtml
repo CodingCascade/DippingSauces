@@ -13,7 +13,29 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">DohFlo</a>
+                <a class="navbar-brand d-flex align-items-center"
+                   asp-controller="Home" asp-action="Index">
+
+                    <img src="~/images/DohFlo-logo.png"
+                         alt="DohFlo Logo"
+                         class="dohflo-logo" />
+                </a>
+                <div class="dohflo-user-menu">
+
+                    <button class="dohflo-menu-button"
+                            type="button"
+                            aria-label="Open menu">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </button>
+
+                    <div class="dohflo-profile-icon">
+                        👤
+                    </div>
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,7 +46,10 @@
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-controller="Accounts" asp-action="Index">Accounts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Transactions" asp-action="Create">Add Transaction</a>
                         </li>
                     </ul>
                 </div>
@@ -37,9 +62,19 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-           Copyright &copy; @DateTime.Now.Year - DohFlo - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top mt-auto py-4 bg-body">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3 small">
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-body-secondary">Copyright &copy; @DateTime.Now.Year DohFlo. All rights reserved.</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="Index">Home</a>|
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a>|
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="CookiePolicy">Cookie Policy</a>|
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteDisclaimer">Site Disclaimer</a>|
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteMap">Site Map</a>|
+                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
+            </div>
         </div>
     </footer>
 

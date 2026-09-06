@@ -1,0 +1,62 @@
+﻿@model IReadOnlyList<DohFlo.Data.Account>
+
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-1">Accounts</h1>
+        <p class="text-muted mb-0">
+            Accounts available for your transactions.
+        </p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add Account</a>
+</div>
+
+@if (TempData["SuccessMessage"] is string message)
+{
+    <div class="alert alert-success" role="alert">@message</div>
+}
+
+@if(Model.Count == 0)
+{
+    <div class="alert alert-info">
+        You do not have any accounts yet.
+        Select <strong>Add Account</strong> to create one.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Institution</th>
+                    <th>Currency</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var account in Model)
+                {
+                    <tr>
+                        <td>@account.Name</td>
+                        <td>@account.Type</td>
+                        <td>
+                            @(string.IsNullOrWhiteSpace(account.Institution) ? "-" : account.Institution)
+                        </td>
+                        <td>@account.CurrencyCode</td>
+                        <td>
+                            <span class="badge @(account.IsClosed ? "text-bg-secondary" : "text-bg-success")">
+                                @(account.IsClosed ? "Closed" : "Open")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

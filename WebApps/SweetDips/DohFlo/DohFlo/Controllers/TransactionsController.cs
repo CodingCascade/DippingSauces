@@ -1,5 +1,4 @@
-﻿using Dohflo.Data;
-using DohFlo.Data;
+﻿using DohFlo.Data;
 using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,16 +16,8 @@ namespace DohFlo.Controllers
         // GET: /Transactions/Create
         public async Task<IActionResult> Create()
         {
-            var vm = new CreateTransactionViewModel
-            {
-                Accounts = await _db.Accounts
-                    .Where(a => a.UserId == BoolieUserId && !a.IsClosed)
-                    .OrderBy(a => a.Name)
-                    .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name })
-                    .ToListAsync(),
-
-            };
-
+            var vm = new CreateTransactionViewModel();
+            await PopulateLists(vm);
             return View(vm);
         }
 

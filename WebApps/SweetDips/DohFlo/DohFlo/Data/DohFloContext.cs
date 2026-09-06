@@ -1,4 +1,4 @@
-﻿using Dohflo.Data;
+﻿using DohFlo.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DohFlo.Data
