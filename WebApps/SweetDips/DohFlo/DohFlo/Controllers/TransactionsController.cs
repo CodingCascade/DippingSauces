@@ -3,6 +3,7 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 
 namespace DohFlo.Controllers
 {
@@ -26,6 +27,15 @@ namespace DohFlo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTransactionViewModel vm)
         { 
+            //The server side validation can't trust the dropdown alone
+            if(vm.AccountId > 0 && !await _db.Accounts.AnyAsync(account =>
+            account.Id == vm.AccountId &&
+            account.UserId == BoolieUserId &&
+            !account.IsClosed))
+            {
+                ModelState.AddModelError(nameof(vm.AccountId), "Please select a valid open account.");
+            }
+
             // Re-populate dropdowns if validation fails
             if(!ModelState.IsValid)
             {
@@ -49,7 +59,9 @@ namespace DohFlo.Controllers
             _db.Transactions.Add(tx);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Create)); // back to the form or go to Details/Index
+            TempData["SuccessMessage"] = "Transaction saved successfully!";
+
+            return RedirectToAction(nameof(Create)); // back to the form
         } 
 
         private async Task PopulateLists(CreateTransactionViewModel vm)

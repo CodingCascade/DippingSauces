@@ -1,12 +1,24 @@
 ﻿@model DohFlo.Models.CreateTransactionViewModel
+
 @{
     ViewData["Title"] = "Add Transaction";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Add Transaction</h1>
+
+<!-- Display a success alert here -->
+@if(TempData["SuccessMessage"] is string message)
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
 
 <form asp-action="Create" method="post" class="row g-3">
     @Html.AntiForgeryToken()
+
+    <!-- Display a validation summary message-->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="col-md-4">
         <label asp-for="AccountId" class="form-label">Account</label>
@@ -57,7 +69,7 @@
     </div>
 
     <div class="col-12">
-        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" id="btn-dohflo-primary" type="submit">Save</button>
     </div>
 </form>
 

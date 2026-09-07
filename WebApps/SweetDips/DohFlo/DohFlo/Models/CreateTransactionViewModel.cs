@@ -11,7 +11,7 @@ namespace DohFlo.Models
         public int? PayeeId { get; set; }
         public int? CategoryId { get; set; }
 
-        [Required, Range(typeof(decimal), "0.01", "1000000.00", ErrorMessage = "Amount must be between 0.01 and 1,000,000.00!")]
+        [Required, Range(typeof(decimal), "0.01", "1000000.00", ErrorMessage = "The amount must be between 0.01 and 1,000,000.00!")]
         public decimal Amount { get; set; }
 
         [Required]

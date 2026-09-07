@@ -1,7 +1,7 @@
 ﻿@model DohFlo.Models.CreateAccountViewModel
 
 @{
-    ViewData["Title"] = "Create Account";
+    ViewData["Title"] = "Add Transaction";
 }
 
 <h1>Create Account</h1>
@@ -46,10 +46,10 @@
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary" id="btn-dohflo-primary">
             Create Account
         </button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        <a asp-action="Index" class="btn btn-outline-secondary" id="btn-dohflo-cancel">Cancel</a>
     </div>
 </form>
 
