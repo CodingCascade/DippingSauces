@@ -14,7 +14,7 @@ namespace DohFlo.Models
         public string Name { get; set; } = "";
 
         [Required(ErrorMessage = "Please select an account type.")]
-        [RegularExpression("^(Checking|Savings|Credit Card|Cash|Investment|Loan|Other)$", ErrorMessage = "Please select a valid accout type.")]
+        [RegularExpression("^(Checking|Savings|Credit Card|Cash|Investment|Loan|Other)$", ErrorMessage = "Please select a valid account type.")]
         [Display(Name = "Account Type")]
         public string Type { get; set; } = "";
 

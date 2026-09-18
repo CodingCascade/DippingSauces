@@ -146,18 +146,21 @@ namespace DohFlo.Controllers
 
             if (duplicateExists)
             {
-                account.Name = accountName;
-                account.Type = viewModel.Type;
-                account.Institution = viewModel.Institution?.Trim() ?? "";
-                account.CurrencyCode = viewModel.CurrencyCode
-                    .Trim()
-                    .ToUpperInvariant();
+                ModelState.AddModelError(nameof(viewModel.Name), "You already have an account with this name.");
 
-                await _db.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = $"Account '{account.Name}' was updated.";
-
+                return View(viewModel);
             }
+
+            account.Name = accountName;
+            account.Type = viewModel.Type;
+            account.Institution = viewModel.Institution?.Trim() ?? "";
+            account.CurrencyCode = viewModel.CurrencyCode
+                .Trim()
+                .ToUpperInvariant();
+
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Account '{account.Name}' was updated.";
 
             return RedirectToAction(nameof(Index));
 

@@ -37,6 +37,7 @@ else
                     <th>Institution</th>
                     <th>Currency</th>
                     <th>Status</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +54,14 @@ else
                             <span class="badge @(account.IsClosed ? "text-bg-secondary" : "text-bg-success")">
                                 @(account.IsClosed ? "Closed" : "Open")
                             </span>
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+
+                            <form asp-action="ToggleClosed" asp-route-id="@account.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                    @(account.IsClosed ? "Reopen" : "Close")</button>
+                            </form>
                         </td>
                     </tr>
                 }
