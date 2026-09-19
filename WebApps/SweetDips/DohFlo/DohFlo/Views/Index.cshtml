@@ -1,9 +1,53 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home";
 }
 
-<h1 class="align-content-center">Welcome to DohFlo</h1>
+<section class="py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <p class="text-uppercase fw-semibold text-secondary mb-2">
+                Portfolio Demonstration Project
+            </p>
+            <h1 class="display-5 fw-bold">Welcome to DohFlo</h1>
+            <p class="lead mt-3">
+                DohFlo is a personal finance web application created to demonstrate
+                full-stack software development with C#, ASP.NET Core MVC,
+                Entity Framework Core, SQL Server, JavaScript, and automated tests.
+            </p>
+            <p>
+                Employers and recruiters may sign in with the provided demo
+                credentials to explore fictional accounts and transactions.
+                The shared demo account is read-only, so the sample data remains
+                consistent for every visitor.
+            </p>
+            <p class="fw-semibold">
+                Please do not enter real names, bank details, account numbers,
+                passwords, or other sensitive information.
+            </p>
+            <a class="btn btn-primary btn-lg me-2"
+               asp-area="Identity"
+               asp-page="/Account/Login">
+                Sign In to the Demo
+            </a>
+            <a class="btn btn-outline-secondary btn-lg"
+               asp-controller="Home"
+               asp-action="SiteMap">
+                View Site Map
+            </a>
+        </div>
 
-<h3>Your Personal Finance Appilcation</h3>
-<p>Add some content here...</p>
+        <div class="col-lg-5">
+            <div class="border rounded-3 p-4 bg-light">
+                <h2 class="h4">What this project demonstrates</h2>
+                <ul class="mb-0">
+                    <li>ASP.NET Core MVC organization</li>
+                    <li>Entity Framework Core and SQL Server</li>
+                    <li>Server-side validation and logging</li>
+                    <li>Authentication and role-based authorization</li>
+                    <li>Unit and integration testing</li>
+                    <li>Cloud-ready configuration and deployment</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

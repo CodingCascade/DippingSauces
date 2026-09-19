@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <!-- Nav bar version 1 --></>
+        <!-- Nav bar version 1 -->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="top-nav-bar">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
@@ -58,11 +58,13 @@
                 <span class="text-body-secondary">Copyright &copy; @DateTime.Now.Year <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="Index">DohFlo</a>. All rights reserved.</span>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy - </a>
-                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="CookiePolicy">Cookie Policy - </a>
-                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteDisclaimer">Site Disclaimer - </a>
-                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteMap">Site Map - </a>
-                <a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a></li>
+                    <li class="list-inline-item"><a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="CookiePolicy">Cookie Policy</a></li>
+                    <li class="list-inline-item"><a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteDisclaimer">Site Disclaimer</a></li>
+                    <li class="list-inline-item"><a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="SiteMap">Site Map</a></li>
+                    <li class="list-inline-item"><a class="link-secondary text-decoration-none" asp-controller="Home" asp-action="ContactUs">Contact Us</a></li>
+                </ul>
             </div>
         </div>
     </footer>

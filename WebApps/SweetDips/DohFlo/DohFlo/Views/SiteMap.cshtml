@@ -2,6 +2,30 @@
     ViewData["Title"] = "Site Map";
 }
 
-<h1>Site Map</h1>
+<h1>@ViewData["Title"]</h1>
+<p>
+    Use this page to find the public information pages and the protected
+    demonstration features in DohFlo.
+</p>
 
-<p>We will add somehting here...</p>
+<h2 class="h4 mt-4">Public pages</h2>
+<ul>
+    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+    <li><a asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a></li>
+    <li><a asp-controller="Home" asp-action="CookiePolicy">Cookie Policy</a></li>
+    <li><a asp-controller="Home" asp-action="SiteDisclaimer">Site Disclaimer</a></li>
+    <li><a asp-controller="Home" asp-action="ContactUs">Contact Us</a></li>
+</ul>
+
+<h2 class="h4 mt-4">Protected demonstration pages</h2>
+<p>The following pages require an authorized demo or private account:</p>
+<ul>
+    <li>Dashboard</li>
+    <li>Accounts</li>
+    <li>Transactions</li>
+</ul>
+
+<p>
+    The shared demo account can view fictional sample data. Create, edit, close,
+    and delete operations are reserved for the private owner account.
+</p>
