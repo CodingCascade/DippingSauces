@@ -10,9 +10,9 @@ namespace DohFlo.Controllers
         private readonly DohFloContext _db;
         private const int BoolieUserId = 1;
 
-        private readonly ILogger<AccountsController> _logger;
+        private readonly ILogger<PayeesController> _logger;
 
-        public PayeesController(DohFloContext db, ILogger<AccountsController> logger)
+        public PayeesController(DohFloContext db, ILogger<PayeesController> logger)
         {
             _db = db;
             _logger = logger;
@@ -83,7 +83,7 @@ namespace DohFlo.Controllers
 
             if (payee is null)
             {
-                _logger.LogWarning("Payee edit failed. Payee {PayeeId} was not found for the current user.", id);
+                _logger.LogWarning("Payee edit failed. Payee #{Id} was not found for the current user.", id);
 
                 return NotFound("The requested payee could not be found.");
             }
@@ -101,13 +101,13 @@ namespace DohFlo.Controllers
         {
             if (id != viewModel.Id)
             {
-                _logger.LogWarning("Payee edit ID mismatch. Route ID: {RouteId}, Form ID: {FormId}", id, viewModel.Id);
+                _logger.LogWarning("Payee edit ID mismatch. Route ID: {RouteId}, Payee ID: {FormId}", id, viewModel.Id);
                 return BadRequest();
             }
 
             if (!ModelState.IsValid)
             {
-                _logger.LogInformation("Payee edit validation failed for payee {PayeeId}.", id);
+                _logger.LogInformation("Payee edit validation failed for payee {Id}.", id);
 
                 ModelState.AddModelError(string.Empty, "Please correct the errors below and try again");
 
@@ -120,7 +120,7 @@ namespace DohFlo.Controllers
 
             if (payee is null)
             {
-                _logger.LogWarning("Payee edit failed. Payee {PayeeId} was not found for the current user.", id);
+                _logger.LogWarning("Payee edit failed. Payee Id #{Id} was not found for the current user.", id);
 
                 return NotFound("The requested payee could not be found.");
             }

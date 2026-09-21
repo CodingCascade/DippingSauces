@@ -42,16 +42,35 @@ body {
     padding: 20px 20px 20px 20px;
 }
 
-#btn-dohflo-primary {
-    background-color: #58029d !important;
-    border-color: #58029d !important;
-}
-
-#btn-dohflo-cancel {
-    background-color: #9d0a02 !important;
-    border-color: #9d0a02 !important;
-}
-
 #main-menu .nav-link {
+    color: #fff;
+}
+
+/* DohFlo primary buttons */
+.btn-primary {
+    background-color: #087f86;
+    border-color: #087f86;
+    color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #06676d;
+    border-color: #06676d;
+    color: #fff;
+}
+
+/* DohFlo outline buttons, such as Edit */
+.btn-outline-primary {
+    color: #087f86;
+    border-color: #087f86;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #087f86;
+    border-color: #087f86;
     color: #fff;
 }
