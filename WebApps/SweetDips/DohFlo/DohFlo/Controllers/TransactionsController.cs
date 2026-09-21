@@ -3,16 +3,32 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace DohFlo.Controllers
 {
     public class TransactionsController : Controller
-    {
-        private readonly DohFloContext _db;
+    {        private readonly DohFloContext _db;
         private const int BoolieUserId = 1; // The first seeded user
 
         public TransactionsController(DohFloContext db) => _db = db;
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var transactions = await _db.Transactions
+                .AsNoTracking()
+                .Include(transaction => transaction.Account)
+                .Include(transaction => transaction.Payee)
+                .Include(transaction => transaction.Category)
+                .Where(transaction => 
+                    transaction.UserId == BoolieUserId &&
+                    !transaction.IsDeleted)
+                .OrderByDescending(transaction => transaction.Date)
+                .ThenByDescending(transaction => transaction.Id)
+                .ToListAsync();
+
+            return View(transactions);
+        }
 
         // GET: /Transactions/Create
         public async Task<IActionResult> Create()
@@ -61,7 +77,7 @@ namespace DohFlo.Controllers
 
             TempData["SuccessMessage"] = "Transaction saved successfully!";
 
-            return RedirectToAction(nameof(Create)); // back to the form
+            return RedirectToAction(nameof(Index));
         } 
 
         private async Task PopulateLists(CreateTransactionViewModel vm)

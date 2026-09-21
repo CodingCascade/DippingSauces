@@ -33,8 +33,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-controller="Home" asp-action="Index"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Transactions" asp-action="Create"><i class="bi bi-plus-circle me-1"></i> Add Transaction</a>
+                        <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-cash-stack"></i> Transactions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Transactions"
+                                       asp-action="Index">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                        View Transactions
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Transactions"
+                                       asp-action="Create">
+                                        <i class="bi bi-plus-circle me-1"></i>
+                                        Add Transactions
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle"
@@ -43,7 +66,6 @@
                                     aria-expanded="false">
                                 <i class="bi bi-gear me-1"></i> Settings
                             </button>
-
                             <ul class="dropdown-menu">
                                 <li>
                                     <a class="dropdown-item"
