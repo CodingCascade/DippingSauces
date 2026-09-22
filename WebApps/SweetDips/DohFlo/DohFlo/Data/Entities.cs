@@ -138,7 +138,7 @@ namespace DohFlo.Data
         public string CurrencyCode { get; set; } = "USD";
 
         public DateTime Date { get; set; } // the transaction date
-        public DateTime? ClearedData { get; set; } // nullable
+        public DateTime? ClearedDate { get; set; } // nullable
         public string? Notes { get; set; } // long text is ok with (nvarchar(max))
 
         public bool IsPending { get; set; } = false;
