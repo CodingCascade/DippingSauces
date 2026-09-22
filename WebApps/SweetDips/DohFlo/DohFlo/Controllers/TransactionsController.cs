@@ -42,9 +42,27 @@ namespace DohFlo.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTransactionViewModel vm)
-        { 
+        {
+            if (vm.PayeeId.HasValue && !await _db.Payees.AnyAsync(payee =>
+                payee.Id == vm.PayeeId.Value &&
+                payee.UserId == BoolieUserId))
+            {
+                ModelState.AddModelError(
+                    nameof(vm.PayeeId),
+                    "Please select a valid payee.");
+            }
+
+            if (vm.CategoryId.HasValue && !await _db.Categories.AnyAsync(category =>
+                    category.Id == vm.CategoryId.Value &&
+                    category.UserId == BoolieUserId))
+            {
+                ModelState.AddModelError(
+                    nameof(vm.CategoryId),
+                    "Please select a valid category.");
+            }
+
             //The server side validation can't trust the dropdown alone
-            if(vm.AccountId > 0 && !await _db.Accounts.AnyAsync(account =>
+            if (vm.AccountId > 0 && !await _db.Accounts.AnyAsync(account =>
             account.Id == vm.AccountId &&
             account.UserId == BoolieUserId &&
             !account.IsClosed))
@@ -66,9 +84,9 @@ namespace DohFlo.Controllers
                 PayeeId = vm.PayeeId,
                 CategoryId = vm.CategoryId, // null is Ok when you'll add splits
                 Amount = vm.Amount,
-                CurrencyCode = vm.CurrencyCode,
+                CurrencyCode = vm.CurrencyCode.Trim().ToUpperInvariant(),
                 Date = vm.Date,
-                Notes = vm.Notes,
+                Notes = vm.Notes?.Trim(),
                 IsPending = vm.IsPending
             };
 
