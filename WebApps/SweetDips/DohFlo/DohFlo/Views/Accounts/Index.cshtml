@@ -56,7 +56,7 @@ else
                             </span>
                         </td>
                         <td class="text-end text-nowrap">
-                            <a asp-action="Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square"></i> Edit</a>
 
                             <form asp-action="ToggleClosed" asp-route-id="@account.Id" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-secondary">

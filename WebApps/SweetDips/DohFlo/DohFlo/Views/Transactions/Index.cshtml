@@ -53,6 +53,8 @@ else
                     <th>Status</th>
                     <th>Amount</th>
                     <th>Notes</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
                 </tr>
             </thead>
 
@@ -75,18 +77,68 @@ else
                         </td>
 
                         <td>
-                            @if (transaction.IsPending)
-                            {
-                                <span class="badge text-bg-warning">
-                                    Pending
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="badge text-bg-success">
-                                    Reconciled
-                                </span>
-                            }
+                            <div class="d-flex align-items-center gap-2">
+                                @if (transaction.IsPending)
+                                {
+                                    <span class="badge text-bg-warning">
+                                        Pending
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-success">
+                                        Reconciled
+                                    </span>
+                                }
+
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-link text-secondary p-0"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                            aria-label="Change transaction status">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <form asp-action="UpdateStatus" method="post">
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@transaction.Id" />
+
+                                                <input type="hidden"
+                                                       name="isPending"
+                                                       value="true" />
+
+                                                <button type="submit"
+                                                        class="dropdown-item"
+                                                        disabled="@transaction.IsPending">
+                                                    Mark as Pending
+                                                </button>
+                                            </form>
+                                        </li>
+
+                                        <li>
+                                            <form asp-action="UpdateStatus" method="post">
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@transaction.Id" />
+
+                                                <input type="hidden"
+                                                       name="isPending"
+                                                       value="false" />
+
+                                                <button type="submit"
+                                                        class="dropdown-item"
+                                                        disabled="@(!transaction.IsPending)">
+                                                    Mark as Reconciled
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
 
                         <td>
@@ -94,6 +146,30 @@ else
                         </td>
                         <td class="text-wrap">
                             @transaction.Notes
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit"
+                               asp-route-id="@transaction.Id"
+                               class="btn btn-sm btn-outline-primary"
+                               aria-label="Edit transaction">
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            <form asp-action="Delete"
+                                  asp-route-id="@transaction.Id"
+                                  method="post"
+                                  onsubmit="return confirm('Are you sure you want to delete this transaction?');">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger"
+                                        aria-label="Delete transaction">
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 }

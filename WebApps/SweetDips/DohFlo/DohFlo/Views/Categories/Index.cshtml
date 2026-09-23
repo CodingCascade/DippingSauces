@@ -45,10 +45,10 @@ else
                         <td>@category.CatType</td>
                         <td>@(category.ParentCategory?.Name ?? "-")</td>
                         <td class="text-end text-nowrap">
-                            <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square"></i> Edit</a>
                             <form asp-action="Delete" asp-route-id="@category.Id" moethod="post" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    Delete
+                                    <i class="bi bi-trash"></i> Delete
                                 </button>
                             </form>
                         </td>
