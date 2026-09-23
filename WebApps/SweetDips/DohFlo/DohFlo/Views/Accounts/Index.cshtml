@@ -37,7 +37,8 @@ else
                     <th>Institution</th>
                     <th>Currency</th>
                     <th>Status</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-star">Close/Re-Open</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,12 +56,29 @@ else
                                 @(account.IsClosed ? "Closed" : "Open")
                             </span>
                         </td>
-                        <td class="text-end text-nowrap">
-                            <a asp-action="Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square"></i> Edit</a>
-
-                            <form asp-action="ToggleClosed" asp-route-id="@account.Id" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                    @(account.IsClosed ? "Reopen" : "Close")</button>
+                        
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@account.Id" class="btn btn-sm btn-outline-primary d-inline-flex flex-column align-items-center gap-1 px-4 py-1" aria-label="Edit account">
+                                <i class="bi bi-pencil-square"></i> 
+                                Edit
+                            </a>
+                        </td>
+                        <td class="text-start">
+                            <form asp-action="ToggleClosed" asp-route-id="@account.Id" method="post">
+                                @if (account.IsClosed)
+                                    {
+                                    <button type="submit" class="btn btn-sm btn-outline-success d-inline-flex flex-column align-items-center gap-1 px-3 py-1" aria-label="Reopen account">
+                                            <i class="bi bi-unlock"></i>
+                                            Reopen
+                                        </button>
+                                    }
+                                else
+                                    {
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary d-inline-flex flex-column align-items-center gap-1 px-3 py-1" aria-label="Close account">
+                                           <i class="bi bi-lock"></i>
+                                           Close
+                                       </button> 
+                                    }
                             </form>
                         </td>
                     </tr>

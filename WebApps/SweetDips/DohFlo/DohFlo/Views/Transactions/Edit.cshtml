@@ -23,7 +23,7 @@
     <div class="col-md-4">
         <label asp-for="AccountId" class="form-label">Account</label>
         <select asp-for="AccountId" class="form-select" asp-items="Model.Accounts">
-            <option value="">-- Select account --</option>
+            <option value="0">-- Select account --</option>
         </select>
         <span class="text-danger" asp-validation-for="AccountId"></span>
     </div>
