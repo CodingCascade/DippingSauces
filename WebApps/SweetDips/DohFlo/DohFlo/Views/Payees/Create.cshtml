@@ -8,8 +8,8 @@
 
 <form asp-action="Create" method="post">
     <partial name="_Form" model="Model" />
-    <button class="btn btn-primary" type="submit">Create Payee</button>
-    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    <button class="btn btn-primary" id="btn-dohflo-primary" type="submit">Add Payee</button>
+    <a asp-action="Index" class="btn btn-outline-secondary" id="btn-dohflo-cancel">Cancel</a>
 </form>
 
 @section Scripts { <partial name="_ValidationScriptsPartial" />} 

@@ -23,7 +23,7 @@
         <label asp-for="Type" class="form-label"></label>
 
         <select asp-for="Type" class="form-select">
-            <option value="">-- Select account type --</option>
+            <option value="0">-- Select account type --</option>
             <option>Checking</option>
             <option>Savings</option>
             <option>Credit Card</option>
@@ -49,7 +49,7 @@
 
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        <a asp-action="Index" class="btn btn-outline-secondary" id="btn-dohflo-cancel">Cancel</a>
     </div>
 </form>
 

@@ -1,10 +1,10 @@
-﻿@model DohFlo.Models.CreateTransactionViewModel
+﻿@model DohFlo.Models.EditTransactionViewModel
 
 @{
-    ViewData["Title"] = "Add Transaction";
+    ViewData["Title"] = "Edit Transaction";
 }
 
-<h1>Add Transaction</h1>
+<h1>Edit Transaction</h1>
 
 <!-- Display a success alert here -->
 @if(TempData["SuccessMessage"] is string message)
@@ -14,9 +14,9 @@
     </div>
 }
 
-<form asp-action="Create" method="post" class="row g-3">
+<form asp-action="Edit" method="post" class="row g-3">
     @Html.AntiForgeryToken()
-
+    <input asp-for="Id" type="hidden" />
     <!-- Display a validation summary message-->
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -74,7 +74,7 @@
     </div>
 
     <div class="col-12">
-        <button class="btn btn-primary" id="btn-dohflo-primary" type="submit">Add Transaction</button>
+        <button class="btn btn-primary" id="btn-dohflo-primary" type="submit">Save changes</button>
         <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>

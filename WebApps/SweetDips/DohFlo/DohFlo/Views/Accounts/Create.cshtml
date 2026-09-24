@@ -21,7 +21,7 @@
     <div class="col-md-6">
         <label asp-for="Type" class="form-label"></label>
         <select asp-for="Type" class="form-select">
-            <option value="">-- Select Account Type --</option>
+            <option value="0">-- Select Account Type --</option>
             <option>Checking</option>
             <option>Savings</option>
             <option>Credit Card</option>
@@ -47,7 +47,7 @@
 
     <div class="col-12">
         <button type="submit" class="btn btn-primary" id="btn-dohflo-primary">
-            Create Account
+            Add Account
         </button>
         <a asp-action="Index" class="btn btn-outline-secondary" id="btn-dohflo-cancel">Cancel</a>
     </div>
