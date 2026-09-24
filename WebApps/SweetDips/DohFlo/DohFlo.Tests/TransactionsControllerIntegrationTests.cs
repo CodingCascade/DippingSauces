@@ -171,5 +171,142 @@ namespace DohFlo.Tests
                 // For testing here
             }
         }
+
+        private static async Task<(SqliteConnection Connection, DohFloContext Db, int Id)>
+            CreateStatusFixtureAsync(TransactionStatus status, DateTime? clearedDate = null, DateTime? reconciledDate = null)
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            await connection.OpenAsync();
+            var options = new DbContextOptionsBuilder<DohFloContext>()
+                .UseSqlite(connection).Options;
+
+            var db = new DohFloContext(options);
+            await db.Database.EnsureCreatedAsync();
+
+            var account = new Account
+            {
+                UserId = 1, Name = "Primary Checking",
+                Type = "Checking", CurrencyCode = "USD"
+            };
+
+            db.Accounts.Add(account);
+            await db.SaveChangesAsync();
+
+            var transaction = new Transaction
+            {
+                UserId = 1,
+                AccountId = account.Id,
+                Amount = 25m,
+                CurrencyCode = "USD",
+                Date = new DateTime(2026, 9, 24),
+                Status = status, 
+                ClearedDate  = clearedDate,
+                ReconciledDate = reconciledDate
+            };
+
+            db.Transactions.Add(transaction);
+            await db.SaveChangesAsync();
+
+            return (connection, db, transaction.Id);
+
+        }
+
+        [Fact]
+        public async Task UpdateStatus_ClearedToReconciled_PreservesClearedDate()
+        {
+            var clearedAt = new DateTime(2026, 9, 20, 12, 0, 0, DateTimeKind.Utc);
+            var fixture = await CreateStatusFixtureAsync(TransactionStatus.Cleared, clearedDate: clearedAt);
+
+            await using var db = fixture.Db;
+            using var connection = fixture.Connection;
+
+            var controller = CreateController(db);
+            var before = DateTime.UtcNow;
+
+            var result = await controller.UpdateStatus(fixture.Id, TransactionStatus.Reconciled);
+
+            var after = DateTime.UtcNow;
+
+            Assert.Equal(nameof(TransactionsController.Index),
+                Assert.IsType<RedirectToActionResult>(result).ActionName);
+
+            db.ChangeTracker.Clear();
+            var saved = await db.Transactions.SingleAsync(t => t.Id == fixture.Id);
+
+            Assert.Equal(TransactionStatus.Reconciled, saved.Status);
+            Assert.Equal(clearedAt, saved.ClearedDate);
+            Assert.NotNull(saved.ReconciledDate);
+            Assert.InRange(saved.ReconciledDate.Value, before, after);
+        }
+
+        // Test Reconciled to pending
+        [Fact]
+        public async Task UpdateStatus_ReconciledToPending_ClearsBothDates()
+        {
+            var clearedAt = new DateTime(2026, 9, 20, 12, 0, 0, DateTimeKind.Utc);
+            var reconciledAt = clearedAt.AddDays(1);
+
+            var fixture = await CreateStatusFixtureAsync(TransactionStatus.Reconciled, clearedAt, reconciledAt);
+
+            await using var db = fixture.Db;
+            using var connection = fixture.Connection;
+
+            var result = await CreateController(db).UpdateStatus(
+                fixture.Id, TransactionStatus.Pending);
+
+            Assert.IsType<RedirectToActionResult>(result);
+
+            db.ChangeTracker.Clear();
+            var saved = await db.Transactions.SingleAsync(t => t.Id == fixture.Id);
+
+            Assert.Equal(TransactionStatus.Pending, saved.Status);
+            Assert.Null(saved.ClearedDate);
+            Assert.Null(saved.ReconciledDate);
+        }
+
+        // Test that selecting the same status preserves dates to catch accidental overwrites when a status action is repeated - use a known date so the assertion is exact.
+        [Fact]
+        public async Task UpdateStatus_ReconciledAgain_PreservesDates()
+        {
+            var clearedAt = new DateTime(2026, 9, 20, 12, 0, 0, DateTimeKind.Utc);
+            var reconciledAt = clearedAt.AddDays(1);
+            var fixture = await CreateStatusFixtureAsync(TransactionStatus.Reconciled, clearedAt, reconciledAt);
+
+            await using var db = fixture.Db;
+            using var connection = fixture.Connection;
+
+            await CreateController(db).UpdateStatus(
+                fixture.Id, TransactionStatus.Reconciled);
+            db.ChangeTracker.Clear();
+
+            var saved = await db.Transactions.SingleAsync(t => t.Id == fixture.Id);
+
+            Assert.Equal(clearedAt, saved.ClearedDate);
+            Assert.Equal(reconciledAt, saved.ReconciledDate);
+        }
+
+        // Test an invalid status value - Enum biding can accept a number that has no defined name. The controller should return BadRequest before changing the database.
+        [Fact]
+        public async Task UpdateStatus_InvalidStatus_DoesNotChangeTransaction()
+        {
+            var fixture = await CreateStatusFixtureAsync(TransactionStatus.Pending);
+            await using var db = fixture.Db;
+
+            using var connection = fixture.Connection;
+
+            var result = await CreateController(db).UpdateStatus(
+                fixture.Id, (TransactionStatus)999);
+
+            Assert.IsType<BadRequestResult>(result);
+            db.ChangeTracker.Clear();
+
+            var saved = await db.Transactions.SingleAsync(t => t.Id == fixture.Id);
+
+            Assert.Equal(TransactionStatus.Pending, saved.Status);
+            Assert.Null(saved.ClearedDate);
+            Assert.Null(saved.ReconciledDate);
+        }
+
+
     }
 }
