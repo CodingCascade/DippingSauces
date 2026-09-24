@@ -54,7 +54,7 @@ namespace DohFlo.Controllers
                 Amount = transaction.Amount,
                 Date = transaction.Date,
                 Notes = transaction.Notes,
-                IsPending = transaction.IsPending,
+                Status = transaction.Status,
                 CurrencyCode = transaction.CurrencyCode
             };
 
@@ -144,13 +144,19 @@ namespace DohFlo.Controllers
                     "Please select a valid category.");
             }
 
+            if (!Enum.IsDefined(viewModel.Status))
+            {
+                ModelState.AddModelError(nameof(viewModel.Status), "Please select a valid transaction status");
+            }
+
             if (!ModelState.IsValid)
             {
                 await PopulateLists(viewModel, transaction.AccountId);
                 return View(viewModel);
             }
 
-            var wasPending = transaction.IsPending;
+            var previousStatus = transaction.Status;
+            var now = DateTime.UtcNow;
 
             transaction.AccountId = viewModel.AccountId;
             transaction.PayeeId = viewModel.PayeeId;
@@ -160,16 +166,34 @@ namespace DohFlo.Controllers
                 viewModel.CurrencyCode.Trim().ToUpperInvariant();
             transaction.Date = viewModel.Date;
             transaction.Notes = viewModel.Notes?.Trim();
-            transaction.IsPending = viewModel.IsPending;
+            transaction.Status = viewModel.Status;
             transaction.UpdatedAt = DateTime.UtcNow;
 
-            if (viewModel.IsPending)
+            if (viewModel.Status == TransactionStatus.Pending)
             {
                 transaction.ClearedDate = null;
+                transaction.ReconciledDate = null;
             }
-            else if (wasPending || transaction.ClearedDate is null)
+            else if (viewModel.Status == TransactionStatus.Cleared)
             {
-                transaction.ClearedDate = DateTime.UtcNow;
+                if (previousStatus != TransactionStatus.Cleared && transaction.ClearedDate is null)
+                {
+                    transaction.ClearedDate = now;
+                }
+
+                transaction.ReconciledDate = null;
+            }
+            else if (viewModel.Status == TransactionStatus.Reconciled)
+            {
+                if (transaction.ClearedDate is null)
+                {
+                    transaction.ClearedDate = now;
+                }
+
+                if (previousStatus != TransactionStatus.Reconciled && transaction.ReconciledDate is null)
+                {
+                    transaction.ReconciledDate = now;
+                }
             }
 
             await _db.SaveChangesAsync();
@@ -260,12 +284,19 @@ namespace DohFlo.Controllers
                 ModelState.AddModelError(nameof(vm.AccountId), "Please select a valid open account.");
             }
 
+            if (!Enum.IsDefined(vm.Status))
+            {
+                ModelState.AddModelError(nameof(vm.Status), "Please select a valid transaction status.");
+            }
+
             // Re-populate dropdowns if validation fails
             if(!ModelState.IsValid)
             {
                 await PopulateLists(vm);
                 return View(vm);
             }
+
+            var now = DateTime.UtcNow;
 
             var tx = new Transaction
             {
@@ -277,7 +308,9 @@ namespace DohFlo.Controllers
                 CurrencyCode = vm.CurrencyCode.Trim().ToUpperInvariant(),
                 Date = vm.Date,
                 Notes = vm.Notes?.Trim(),
-                IsPending = vm.IsPending
+                Status = vm.Status,
+                ClearedDate = vm.Status == TransactionStatus.Pending ? null : now,
+                ReconciledDate = vm.Status == TransactionStatus.Reconciled ? null : now
             };
 
             _db.Transactions.Add(tx);
@@ -319,8 +352,13 @@ namespace DohFlo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateStatus(int id, bool isPending)
+        public async Task<IActionResult> UpdateStatus(int id, TransactionStatus status)
         {
+            if (!Enum.IsDefined(status))
+            {
+                return BadRequest();
+            }
+
             var transaction = await _db.Transactions
                 .FirstOrDefaultAsync(transaction =>
                     transaction.Id == id &&
@@ -330,17 +368,45 @@ namespace DohFlo.Controllers
             if (transaction is null)
             {
                 TempData["ErrorMessage"] = "The transaction could not be found.";
-
                 return RedirectToAction(nameof(Index));
             }
 
-            transaction.IsPending = isPending;
+            var now = DateTime.UtcNow;
 
-            transaction.ClearedDate = isPending ? null : DateTime.UtcNow;
+            if (status == TransactionStatus.Pending)
+            {
+                transaction.ClearedDate = null;
+                transaction.ReconciledDate = null;
+            }
+            else if (status == TransactionStatus.Cleared)
+            {
+                if (transaction.ClearedDate is null)
+                {
+                    transaction.ClearedDate = now;
+                }
+
+                transaction.ReconciledDate = null;
+            }
+            else if (status == TransactionStatus.Reconciled)
+            {
+                if (transaction.ClearedDate is null)
+                {
+                    transaction.ClearedDate = now;
+                }
+
+                if (transaction.ReconciledDate is null)
+                {
+                    transaction.ReconciledDate = now;
+                }
+            }
+
+            transaction.Status = status;
+            transaction.UpdatedAt = now;
 
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = isPending ? "The transaction was marked as pending." : "The transaction was reconciled.";
+            TempData["SuccessMessage"] =
+                $"The transaction was marked as {status.ToString().ToLowerInvariant()}.";
 
             return RedirectToAction(nameof(Index));
         }

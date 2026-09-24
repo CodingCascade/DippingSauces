@@ -45,7 +45,7 @@ namespace DohFlo.Tests
                 CurrencyCode = "USD",
                 Date = new DateTime(2026, 9, 22),
                 Notes = "Original notes",
-                IsPending = true
+                Status = TransactionStatus.Pending
             };
 
             db.Transactions.Add(transaction);
@@ -61,7 +61,7 @@ namespace DohFlo.Tests
                 CurrencyCode = "usd",
                 Date = new DateTime(2026, 9, 23),
                 Notes = " Updated notes ",
-                IsPending = false
+                Status = TransactionStatus.Cleared
             };
 
             // Act
@@ -81,8 +81,9 @@ namespace DohFlo.Tests
             Assert.Equal(45.50m, savedTransaction.Amount);
             Assert.Equal("USD", savedTransaction.CurrencyCode);
             Assert.Equal("Updated notes", savedTransaction.Notes);
-            Assert.False(savedTransaction.IsPending);
+            Assert.Equal(TransactionStatus.Cleared, savedTransaction.Status);
             Assert.NotNull(savedTransaction.ClearedDate);
+            Assert.Null(savedTransaction.ReconciledDate);
             Assert.False(savedTransaction.IsDeleted);
         }
 

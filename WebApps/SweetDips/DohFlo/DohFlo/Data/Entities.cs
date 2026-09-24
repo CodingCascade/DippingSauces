@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Transactions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR;
 
 namespace DohFlo.Data
 {
@@ -139,9 +138,10 @@ namespace DohFlo.Data
 
         public DateTime Date { get; set; } // the transaction date
         public DateTime? ClearedDate { get; set; } // nullable
+        public DateTime? ReconciledDate { get; set; }
+        public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
         public string? Notes { get; set; } // long text is ok with (nvarchar(max))
 
-        public bool IsPending { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
 

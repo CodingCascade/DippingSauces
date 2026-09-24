@@ -58,9 +58,14 @@
         <input asp-for="Date" type="date" class="form-control" />
     </div>
 
-    <div class="col-md-2 form-check" style="margin-top: 2.5rem;">
-        <input asp-for="IsPending" class="form-check-input" />
-        <label asp-for="IsPending" class="form-check-label">Pending</label>
+    <div class="col-md-3">
+        <label asp-for="Status" class="form-label">Status</label>
+        <select asp-for="Status" class="form-select">
+            <option value="Pending">Pending</option>
+            <option value="Cleared">Cleared</option>
+            <option value="Reconciled">Reconciled</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
     </div>
 
     <div class="col-12">

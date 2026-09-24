@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DohFlo.Data;
 
 namespace DohFlo.Models
 {
@@ -23,7 +24,7 @@ namespace DohFlo.Models
         [StringLength(1000)]
         public string? Notes { get; set; }
 
-        public bool IsPending { get; set; }
+        public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
 
         [Required(ErrorMessage = "Please enter a currency code.")]
         [RegularExpression("^[A-Za-z]{3}$", ErrorMessage = "Use a three-letter currency code, such as USD.")]

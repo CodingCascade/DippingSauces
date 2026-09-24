@@ -78,18 +78,20 @@ else
 
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                @if (transaction.IsPending)
+                                @switch (transaction.Status)
                                 {
-                                    <span class="badge text-bg-warning">
-                                        Pending
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge text-bg-success">
-                                        Reconciled
-                                    </span>
-                                }
+                                    case DohFlo.Data.TransactionStatus.Pending:
+                                        <span class="badge text-bg-warning">Pending</span>
+                                        break;
+
+                                    case DohFlo.Data.TransactionStatus.Cleared:
+                                        <span class="badge text-bg-info">Cleared</span>
+                                        break;
+
+                                    case DohFlo.Data.TransactionStatus.Reconciled:
+                                        <span class="badge text-bg-success">Reconciled</span>
+                                        break;
+                               }
 
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-link text-secondary p-0"
@@ -103,17 +105,12 @@ else
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <form asp-action="UpdateStatus" method="post">
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@transaction.Id" />
-
-                                                <input type="hidden"
-                                                       name="isPending"
-                                                       value="true" />
+                                                <input type="hidden" name="id" value="@transaction.Id" />
+                                                <input type="hidden" name="status" value="Pending" />
 
                                                 <button type="submit"
                                                         class="dropdown-item"
-                                                        disabled="@transaction.IsPending">
+                                                        disabled="@(transaction.Status == DohFlo.Data.TransactionStatus.Pending)">
                                                     Mark as Pending
                                                 </button>
                                             </form>
@@ -121,22 +118,31 @@ else
 
                                         <li>
                                             <form asp-action="UpdateStatus" method="post">
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@transaction.Id" />
-
-                                                <input type="hidden"
-                                                       name="isPending"
-                                                       value="false" />
+                                                <input type="hidden" name="id" value="@transaction.Id" />
+                                                <input type="hidden" name="status" value="Cleared" />
 
                                                 <button type="submit"
                                                         class="dropdown-item"
-                                                        disabled="@(!transaction.IsPending)">
+                                                        disabled="@(transaction.Status == DohFlo.Data.TransactionStatus.Cleared)">
+                                                    Mark as Cleared
+                                                </button>
+                                            </form>
+                                        </li>
+
+                                        <li>
+                                            <form asp-action="UpdateStatus" method="post">
+                                                <input type="hidden" name="id" value="@transaction.Id" />
+                                                <input type="hidden" name="status" value="Reconciled" />
+
+                                                <button type="submit"
+                                                        class="dropdown-item"
+                                                        disabled="@(transaction.Status == DohFlo.Data.TransactionStatus.Reconciled)">
                                                     Mark as Reconciled
                                                 </button>
                                             </form>
                                         </li>
                                     </ul>
+
                                 </div>
                             </div>
                         </td>
