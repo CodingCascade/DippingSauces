@@ -1,0 +1,28 @@
+﻿@model DohFlo.Models.CategoryFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="row g-3 mb-3">
+    <div class="col-md-6">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="CatType" class="form-label"></label>
+        <select asp-for="CatType" class="form-select">
+            <option>Expense</option>
+            <option>Income</option>
+            <option>Transfer</option>
+        </select>
+        <span asp-validation-for="CatType" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="ParentCategoryId" class="form-label"></label>
+        <select asp-for="ParentCategoryId" asp-items="Model.ParentCategories" class="form-select">
+            <option value="">-- None --</option>
+        </select>
+        <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
+    </div>
+</div>

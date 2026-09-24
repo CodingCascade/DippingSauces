@@ -1,10 +1,10 @@
 html {
-  font-size: 14px;
+  font-size: 18px;
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -18,6 +18,7 @@ html {
 }
 
 body {
+  margin-top: 0px;
   margin-bottom: 60px;
 }
 
@@ -28,4 +29,48 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+.dohflo-logo {
+    width: 350px;
+    height: auto;
+    display: block;
+}
+
+#top-nav-bar {
+    background-color: #02959d !important;
+    padding: 20px 20px 20px 20px;
+}
+
+#main-menu .nav-link {
+    color: #fff;
+}
+
+/* DohFlo primary buttons */
+.btn-primary {
+    background-color: #087f86;
+    border-color: #087f86;
+    color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #06676d;
+    border-color: #06676d;
+    color: #fff;
+}
+
+/* DohFlo outline buttons, such as Edit */
+.btn-outline-primary {
+    color: #087f86;
+    border-color: #087f86;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #087f86;
+    border-color: #087f86;
+    color: #fff;
 }

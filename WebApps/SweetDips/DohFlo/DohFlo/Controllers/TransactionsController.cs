@@ -1,5 +1,4 @@
-﻿using Dohflo.Data;
-using DohFlo.Data;
+﻿using DohFlo.Data;
 using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,25 +7,34 @@ using Microsoft.EntityFrameworkCore;
 namespace DohFlo.Controllers
 {
     public class TransactionsController : Controller
-    {
-        private readonly DohFloContext _db;
+    {        private readonly DohFloContext _db;
         private const int BoolieUserId = 1; // The first seeded user
 
         public TransactionsController(DohFloContext db) => _db = db;
 
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var transactions = await _db.Transactions
+                .AsNoTracking()
+                .Include(transaction => transaction.Account)
+                .Include(transaction => transaction.Payee)
+                .Include(transaction => transaction.Category)
+                .Where(transaction => 
+                    transaction.UserId == BoolieUserId &&
+                    !transaction.IsDeleted)
+                .OrderByDescending(transaction => transaction.Date)
+                .ThenByDescending(transaction => transaction.Id)
+                .ToListAsync();
+
+            return View(transactions);
+        }
+
         // GET: /Transactions/Create
         public async Task<IActionResult> Create()
         {
-            var vm = new CreateTransactionViewModel
-            {
-                Accounts = await _db.Accounts
-                    .Where(a => a.UserId == BoolieUserId && !a.IsClosed)
-                    .OrderBy(a => a.Name)
-                    .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name })
-                    .ToListAsync(),
-
-            };
-
+            var vm = new CreateTransactionViewModel();
+            await PopulateLists(vm);
             return View(vm);
         }
 
@@ -35,6 +43,15 @@ namespace DohFlo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateTransactionViewModel vm)
         { 
+            //The server side validation can't trust the dropdown alone
+            if(vm.AccountId > 0 && !await _db.Accounts.AnyAsync(account =>
+            account.Id == vm.AccountId &&
+            account.UserId == BoolieUserId &&
+            !account.IsClosed))
+            {
+                ModelState.AddModelError(nameof(vm.AccountId), "Please select a valid open account.");
+            }
+
             // Re-populate dropdowns if validation fails
             if(!ModelState.IsValid)
             {
@@ -58,7 +75,9 @@ namespace DohFlo.Controllers
             _db.Transactions.Add(tx);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Create)); // back to the form or go to Details/Index
+            TempData["SuccessMessage"] = "Transaction saved successfully!";
+
+            return RedirectToAction(nameof(Index));
         } 
 
         private async Task PopulateLists(CreateTransactionViewModel vm)

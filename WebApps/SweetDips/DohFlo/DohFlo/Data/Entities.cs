@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Dohflo.Data
+namespace DohFlo.Data
 {
     // A timestamp for audit
     public abstract class AuditedEntity
@@ -50,7 +50,7 @@ namespace Dohflo.Data
         public string Name { get; set; } = "";
 
         [MaxLength(50)]
-        public string Type { get; set; } = ""; // e.g., hecking, Savings, CreditCard
+        public string Type { get; set; } = ""; // e.g., checking, Savings, CreditCard
 
         [MaxLength(200)]
         public string Institution { get; set; } = "";
@@ -138,7 +138,7 @@ namespace Dohflo.Data
         public string CurrencyCode { get; set; } = "USD";
 
         public DateTime Date { get; set; } // the transaction date
-        public DateTime? ClearedData { get; set; } // nullable
+        public DateTime? ClearedDate { get; set; } // nullable
         public string? Notes { get; set; } // long text is ok with (nvarchar(max))
 
         public bool IsPending { get; set; } = false;

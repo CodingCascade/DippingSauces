@@ -1,0 +1,18 @@
+﻿@model DohFlo.Models.CategoryFormViewModel
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<h1>Add Category</h1>
+
+<div class="d-flex gap-2">
+    <form asp-action="Create" method="post">
+        <partial name="_Form" model="Model" />
+        <button class="btn btn-primary" type="submit">Create Category</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

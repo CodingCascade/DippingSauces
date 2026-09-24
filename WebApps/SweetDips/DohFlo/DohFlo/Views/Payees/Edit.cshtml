@@ -1,0 +1,15 @@
+﻿@model DohFlo.Models.PayeeFormViewModel
+
+@{
+    ViewData["Titlte"] = "Edit Payee";
+}
+
+<h1>Edit Payee</h1>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <partial name="_Form" model="Model" />
+    <button class="btn btn-priamry" type="submit">Save Changes</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
