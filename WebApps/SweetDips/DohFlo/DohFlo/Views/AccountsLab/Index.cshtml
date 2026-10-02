@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Vue Accounts Lab";
+}
+
+<div id="accounts-app" v-cloak>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1>Vue Accounts Lab</h1>
+            <p class="text-muted mb-0">
+                This page loads account JSON from the DohFlo REST API.
+            </p>
+        </div>
+
+        <button class="btn btn-outline-primary" type="button" v-on:click="loadAccounts" v-bind:disabled="loading">
+            Refresh
+        </button>
+
+        <div class="form-check form-switch mb-3">
+            <input id="showClosed" class="form-check-input" type="checkbox" v-model="showClosed" />
+            <label class="form-check-label" for="showClosed">
+                Show closed accounts
+            </label>
+        </div>
+
+        <p v-if="loading">Loading accounts...</p>
+
+        <div v-if="errorMessage" class="alert alert-danger" rolle="alert">
+            <span v-text="errorMessage"></span>
+        </div>
+
+        <div v-if="!loading && !errorMessage" class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Institution</th>
+                        <th>Currency</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="account in visibleAccounts" v-bind:key="account.id">
+                        <td v-text="account.name"></td>
+                        <td v-text="account.type"></td>
+                        <td v-text="account.institution || '-'"></td>
+                        <td v-text="account.currencyCode"></td>
+                        <td>
+                            <span class="badge" v-bind:class="account.isClosed
+                                ? 'text-bg-secondary'
+                                : 'text-bg-success'"
+                            v-text="account.isClosed ? 'Closed' : 'Open'">
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" v-on:click="changeStatus(account)" v-bind:disabled="account.saving">
+                                <span v-text="account.saving ? 'Saving...' : account.isClosed ? 'Reopen' : 'Close'">
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p v-if="visibleAccounts.length === 0" class="text-muted">
+                No accounts match the current filter.
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="~/js/accounts-lab.js" asp-append-version="true"></script>
+}
