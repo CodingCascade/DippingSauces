@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DohFlo.Controllers
 {
     public class TransactionsController : Controller
-    {        private readonly DohFloContext _db;
+    {        
+        private readonly DohFloContext _db;
         private const int BoolieUserId = 1; // The first seeded user
 
         public TransactionsController(DohFloContext db) => _db = db;
@@ -245,6 +246,7 @@ namespace DohFlo.Controllers
         }
 
         // GET: /Transactions/Create
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var vm = new CreateTransactionViewModel();
@@ -310,7 +312,7 @@ namespace DohFlo.Controllers
                 Notes = vm.Notes?.Trim(),
                 Status = vm.Status,
                 ClearedDate = vm.Status == TransactionStatus.Pending ? null : now,
-                ReconciledDate = vm.Status == TransactionStatus.Reconciled ? null : now
+                ReconciledDate = vm.Status == TransactionStatus.Reconciled ? now : null
             };
 
             _db.Transactions.Add(tx);

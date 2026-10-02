@@ -148,6 +148,53 @@ namespace DohFlo.Tests
             Assert.Equal(1, await db.Transactions.CountAsync());
         }
 
+        [Theory]
+        [InlineData(TransactionStatus.Pending, false, false)]
+        [InlineData(TransactionStatus.Cleared, true, false)]
+        [InlineData(TransactionStatus.Reconciled, true, true)]
+        public async Task Create_Status_SetsMatchingTimestamps(TransactionStatus status, bool hasClearedDate, bool hasReconciledDate)
+        {
+            using var connection = new SqliteConnection("DataSource=:memory:");
+            await connection.OpenAsync();
+
+            var options = new DbContextOptionsBuilder<DohFloContext>()
+                .UseSqlite(connection).Options;
+
+            await using var db = new DohFloContext(options);
+            await db.Database.EnsureCreatedAsync();
+
+            var account = new Account
+            {
+                UserId = 1,
+                Name = "Status test",
+                Type = "Checking"
+            };
+
+            db.Accounts.Add(account);
+            await db.SaveChangesAsync();
+
+            var controller = CreateController(db);
+            var result = await controller.Create(new CreateTransactionViewModel
+            {
+                AccountId = account.Id,
+                Amount = 10m,
+                Date = new DateTime(2026, 10, 1),
+                Status = status
+            });
+
+            Assert.IsType<RedirectToActionResult>(result);
+            db.ChangeTracker.Clear();
+
+            var saved = await db.Transactions.SingleAsync();
+
+            Assert.Equal(status, saved.Status);
+            Assert.Equal(hasClearedDate, saved.ClearedDate.HasValue);
+            Assert.Equal(hasReconciledDate, saved.ReconciledDate.HasValue);
+
+            if (status == TransactionStatus.Reconciled)
+                Assert.Equal(saved.ClearedDate, saved.ReconciledDate);
+        }
+
         private static TransactionsController CreateController(DohFloContext db)
         {
             var controller = new TransactionsController(db);

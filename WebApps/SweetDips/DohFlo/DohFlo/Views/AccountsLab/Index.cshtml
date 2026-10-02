@@ -14,6 +14,7 @@
         <button class="btn btn-outline-primary" type="button" v-on:click="loadAccounts" v-bind:disabled="loading">
             Refresh
         </button>
+    </div>
 
         <div class="form-check form-switch mb-3">
             <input id="showClosed" class="form-check-input" type="checkbox" v-model="showClosed" />
@@ -24,7 +25,7 @@
 
         <p v-if="loading">Loading accounts...</p>
 
-        <div v-if="errorMessage" class="alert alert-danger" rolle="alert">
+        <div v-if="errorMessage" class="alert alert-danger" role="alert">
             <span v-text="errorMessage"></span>
         </div>
 
@@ -67,7 +68,6 @@
                 No accounts match the current filter.
             </p>
         </div>
-    </div>
 </div>
 
 @section Scripts {

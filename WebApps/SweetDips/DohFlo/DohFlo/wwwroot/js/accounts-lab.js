@@ -31,7 +31,7 @@ createApp({
                 });
 
                 if (!response.ok) {
-                    throw new error('The API returned status ${response.status}.');
+                    throw new error(`The API returned status ${response.status}.`);
                 }
 
                 const data = await response.json();
@@ -52,7 +52,7 @@ createApp({
             this.errorMessage = "";
 
             try {
-                const response = await fetch('/api/accounts/${account.id}/status',
+                const response = await fetch(`/api/accounts/${account.id}/status`,
                     {
                         method: "PATCH",
                         headers: {
@@ -65,7 +65,7 @@ createApp({
                     });
 
                 if (!response.ok) {
-                    throw new error('The API returned status ${response.status}.');
+                    throw new error(`The API returned status ${response.status}.`);
                 }
 
                 const updatedAccount = await response.json();

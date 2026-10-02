@@ -1,10 +1,7 @@
 ﻿using DohFlo.Data;
-using DohFlo.Models;
 using DohFlo.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.Security.Principal;
 
 namespace DohFlo.Controllers.Api
 {

@@ -129,7 +129,7 @@ namespace DohFlo.Controllers
             {
                 _logger.LogWarning("Category edit failed. Category #{Id}", id);
 
-                return NotFound("The requested category culd not be found.");
+                return NotFound("The requested category could not be found.");
             }
 
             var viewModel = new CategoryFormViewModel
