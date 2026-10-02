@@ -18,7 +18,7 @@ namespace DohFlo.Models.Api
 
         [Required]
         [RegularExpression("^[A-Za-z]{3}$",
-            ErrorMessage = "Use a three-letter currency code, such as a USD.")]
+            ErrorMessage = "Use a three-letter currency code, such as USD.")]
         public string CurrencyCode { get; set; } = "USD";
     }
 }

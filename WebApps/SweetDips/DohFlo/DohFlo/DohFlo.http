@@ -6,20 +6,23 @@ Accept: application/json
 
 ### Get one account
 GET {{DohFlo_HostAddrss}}/api/accounts/1
-Acept : application/jeson
+Acept : application/json
 
 ### Create an account
 POST {{DohFlo_HostAddress}}/api/accounts
-Content-Type: application/json {
+Content-Type: application/json 
+
+{
   "name": "Vacation Savings",
-  "type": "Savings"
-  "institution": "Example Bank"
-  "CurrencyCode": "usd"
+  "type": "Savings",
+  "institution": "Example Bank",
+  "CurrencyCode": "USD"
 }
 
-### update account 1
+### Update account 1
 PUT {{DohFlo_HostAddress}}/ap/accounts/1
-Count-Type: application/json
+Content-Type: application/json
+
 {
   "name":"Primary Checking",
   "type": "Checking",
@@ -30,6 +33,7 @@ Count-Type: application/json
 ### Close account 1
 PATCH {{DohFlo_HostAddress}}/api/accounts/1/status
 Content-Type: application/json 
+
 {
   "isClosed": true
 }
@@ -37,6 +41,7 @@ Content-Type: application/json
 ### Prove that validation returns 400
 POST {{DohFlo_HostAddress}}/api/accounts
 Content-Type: application/json
+
 {
   "name": "",
   "type": "Banana",

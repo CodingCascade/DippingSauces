@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"><!-- Added Bootstrap icons -->
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.min.css"><!-- Added Bootstrap icons -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DohFlo.styles.css" asp-append-version="true" />
     <link rel="icon" type="image/png" href="~/images/DohFlo-icon.png" />
@@ -23,7 +23,7 @@
                          alt="DohFlo Logo"
                          class="dohflo-logo" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-menu" aria-controls="main-menu"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -94,9 +94,11 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="AccountsLab" asp-action="Index">
-                                        <i class="bi bi-flask me-2"></i>
-                                        Vue Accounts Lab
+                                    <a class="dropdown-item" 
+                                        asp-controller="AccountsLab" 
+                                        asp-action="Index">
+                                        <i class="bi bi-code-slash me-2"></i>
+                                        Accounts (Vue.js)
                                     </a>
                                 </li>
                             </ul>

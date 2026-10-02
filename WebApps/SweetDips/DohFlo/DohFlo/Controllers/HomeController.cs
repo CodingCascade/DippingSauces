@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using DohFlo.Models;
 
 namespace DohFlo.Controllers
 {
@@ -27,6 +29,14 @@ namespace DohFlo.Controllers
         public IActionResult SiteMap()
         {
             return View("~/Views/SiteMap.cshtml");
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View("~/Views/Error.cshtml", new ErrorViewModel {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
 
         public IActionResult ContactUs()

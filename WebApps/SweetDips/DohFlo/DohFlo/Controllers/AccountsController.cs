@@ -166,7 +166,7 @@ namespace DohFlo.Controllers
 
         }
 
-        // ToggledClosed the closed/inactive account. We can use it as a reversable status instead of deleting the row.
+        // Toggle the account status without deleting the row.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleClosed(int id)
