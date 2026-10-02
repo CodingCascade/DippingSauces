@@ -74,3 +74,13 @@ body {
     border-color: #087f86;
     color: #fff;
 }
+
+/* For the Vue styles */
+[v-cloak] {
+    display: none;
+}
+
+#accounts-app .table td,
+#accounts-app .table th {
+    vertical-align: middle;
+}
