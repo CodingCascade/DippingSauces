@@ -1,0 +1,13 @@
+﻿@model DohFlo.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Oops,something went wrong!</h1>
+
+<p>Please try again. If the problem continues, share the request ID when reporting it.</p>
+
+@if (Model.ShowRequestId)
+{
+    <p><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+}

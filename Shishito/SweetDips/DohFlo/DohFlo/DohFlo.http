@@ -1,0 +1,50 @@
+@DohFlo_HostAddress = https://localhost:44323
+
+### Get every account
+GET {{DohFlo_HostAddress}}/api/accounts
+Accept: application/json
+
+### Get one account
+GET {{DohFlo_HostAddrss}}/api/accounts/1
+Acept : application/json
+
+### Create an account
+POST {{DohFlo_HostAddress}}/api/accounts
+Content-Type: application/json 
+
+{
+  "name": "Vacation Savings",
+  "type": "Savings",
+  "institution": "Example Bank",
+  "CurrencyCode": "USD"
+}
+
+### Update account 1
+PUT {{DohFlo_HostAddress}}/ap/accounts/1
+Content-Type: application/json
+
+{
+  "name":"Primary Checking",
+  "type": "Checking",
+  "institution": "Example Bank",
+  "currencyCode": "USD"
+}
+
+### Close account 1
+PATCH {{DohFlo_HostAddress}}/api/accounts/1/status
+Content-Type: application/json 
+
+{
+  "isClosed": true
+}
+
+### Prove that validation returns 400
+POST {{DohFlo_HostAddress}}/api/accounts
+Content-Type: application/json
+
+{
+  "name": "",
+  "type": "Banana",
+  "institution": "",
+  "currencyCode": "US"
+}
