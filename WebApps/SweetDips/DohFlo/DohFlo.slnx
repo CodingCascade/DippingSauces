@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="DohFlo.Tests/DohFlo.Tests.csproj" />
-  <Project Path="DohFlo/DohFlo.csproj" />
-</Solution>
