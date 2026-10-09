@@ -60,12 +60,12 @@ namespace DohFlo.Data
 
             foreach (var e in entries)
             {
-                if(e.State == EntityState.Added)
+                if (e.State == EntityState.Added)
                 {
                     e.Entity.CreatedAt = now;
                     e.Entity.UpdatedAt = now;
                 }
-                else if(e.State == EntityState.Modified) 
+                else if (e.State == EntityState.Modified)
                 {
                     e.Entity.UpdatedAt = now;
                 }
@@ -79,7 +79,9 @@ namespace DohFlo.Data
                     entry.Entity.UpdatedAt = now;
                 }
                 else if (entry.State == EntityState.Modified)
+                {
                     entry.Entity.UpdatedAt = now;
+                }
             }
 
             return base.SaveChangesAsync(cancellationToken);

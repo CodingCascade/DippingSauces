@@ -26,6 +26,7 @@ namespace DohFlo.Data
 
         [MaxLength(150)]
         public string DisplayName { get; set; } = "";
+        public bool IsBlocked { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }

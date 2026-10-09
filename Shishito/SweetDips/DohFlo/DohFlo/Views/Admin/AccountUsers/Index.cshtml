@@ -1,0 +1,77 @@
+﻿@model IReadOnlyList<DohFlo.Models.Admin.AccountUserRowViewModel>
+
+@{
+    ViewData["Title"] = "Account Users";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Account Users</h1>
+    <a asp-action="Create" class="btn btn-primary">Create a Standard User</a>
+</div>
+
+@if (TempData["SuccessMessage"] is string message)
+{
+    <div class="alert alert-success" role="alert">@message</div>
+}
+
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <div class="alert alert-danger" role="alert">@errorMessage</div>
+}
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Display Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.DisplayName</td>
+                    <td>@user.Role</td>
+                    <td>@(user.IsBlocked ? "Inactive" : "Active")</td>
+                    <td>
+                        @if (!user.IsAdmin)
+                        {
+                            <form asp-controller="AccountUsers"
+                                  asp-action="SetBlocked"
+                                  method="post"
+                                  asp-antiforgery="true"
+                                  class="d-inline">
+                                <input type="hidden" name="id" value="@user.Id" />
+                                
+                                @if (user.IsBlocked)
+                                    {
+                                    <input type="hidden" name="blocked" value="false" />
+                                    <button class="btn btn-sm btn-outline-primary" type="submit">
+                                        Restore
+                                    </button>
+                                    }
+                                else
+                                    {
+                                    <input type="hidden" name="blocked" value="true" />
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                                        Block
+                                    </button>
+                                    }
+
+                            </form>
+
+                            <a asp-action="ResetPassword" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">
+                                Reset Password
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

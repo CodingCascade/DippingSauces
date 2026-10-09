@@ -24,12 +24,15 @@
                 Please do not enter real names, bank details, account numbers,
                 passwords, or other sensitive information.
             </p>
-            <a class="btn btn-primary btn-lg me-2"
-               asp-area="Identity"
-               asp-page="/Account/Login">
-                Sign In to the Demo
-            </a>
-            <a class="btn btn-outline-secondary btn-lg"
+            @if (User.Identity?.IsAuthenticated != true)
+            {
+                <a class="btn btn-primary btn-lg me-2"
+                   asp-controller="Auth"
+                   asp-action="Login">
+                    Sign In to the Demo
+                </a>
+            }
+            <a class="btn btn-secondary btn-lg"
                asp-controller="Home"
                asp-action="SiteMap">
                 View Site Map

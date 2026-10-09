@@ -3,13 +3,14 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using DohFlo.Security;
 
 namespace DohFlo.Controllers
 {
     public class TransactionsController : Controller
     {        
         private readonly DohFloContext _db;
-        private const int BoolieUserId = 1; // The first seeded user
+        private int CurrentUserId => FinanceAccess.GetUserId(User);
 
         public TransactionsController(DohFloContext db) => _db = db;
 
@@ -22,7 +23,7 @@ namespace DohFlo.Controllers
                 .Include(transaction => transaction.Payee)
                 .Include(transaction => transaction.Category)
                 .Where(transaction => 
-                    transaction.UserId == BoolieUserId &&
+                    transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted)
                 .OrderByDescending(transaction => transaction.Date)
                 .ThenByDescending(transaction => transaction.Id)
@@ -38,7 +39,7 @@ namespace DohFlo.Controllers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(transaction =>
                     transaction.Id == id &&
-                    transaction.UserId == BoolieUserId &&
+                    transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted);
 
             if (transaction is null)
@@ -61,7 +62,7 @@ namespace DohFlo.Controllers
 
             viewModel.Accounts = await _db.Accounts
                 .AsNoTracking()
-                .Where(account => account.UserId == BoolieUserId &&
+                .Where(account => account.UserId == CurrentUserId &&
                 (!account.IsClosed || account.Id == transaction.AccountId))
                 .OrderBy(account => account.Name)
                 .Select(account => new SelectListItem
@@ -73,7 +74,7 @@ namespace DohFlo.Controllers
 
             viewModel.Payees = await _db.Payees
                 .AsNoTracking()
-                .Where(payee => payee.UserId == BoolieUserId)
+                .Where(payee => payee.UserId == CurrentUserId)
                 .OrderBy(payee => payee.Name)
                 .Select(payee => new SelectListItem
                 {
@@ -84,7 +85,7 @@ namespace DohFlo.Controllers
 
             viewModel.Categories = await _db.Categories
                 .AsNoTracking()
-                .Where(category => category.UserId == BoolieUserId)
+                .Where(category => category.UserId == CurrentUserId)
                 .OrderBy(category => category.Name)
                 .Select(category => new SelectListItem
                 {
@@ -104,7 +105,7 @@ namespace DohFlo.Controllers
             var transaction = await _db.Transactions
                 .FirstOrDefaultAsync(transaction =>
                     transaction.Id == viewModel.Id &&
-                    transaction.UserId == BoolieUserId &&
+                    transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted);
 
             if (transaction is null)
@@ -114,7 +115,7 @@ namespace DohFlo.Controllers
 
             var accountIsValid = await _db.Accounts.AnyAsync(account =>
                 account.Id == viewModel.AccountId &&
-                account.UserId == BoolieUserId &&
+                account.UserId == CurrentUserId &&
                 (!account.IsClosed ||
                  account.Id == transaction.AccountId));
 
@@ -128,7 +129,7 @@ namespace DohFlo.Controllers
             if (viewModel.PayeeId.HasValue &&
                 !await _db.Payees.AnyAsync(payee =>
                     payee.Id == viewModel.PayeeId.Value &&
-                    payee.UserId == BoolieUserId))
+                    payee.UserId == CurrentUserId))
             {
                 ModelState.AddModelError(
                     nameof(viewModel.PayeeId),
@@ -138,7 +139,7 @@ namespace DohFlo.Controllers
             if (viewModel.CategoryId.HasValue &&
                 !await _db.Categories.AnyAsync(category =>
                     category.Id == viewModel.CategoryId.Value &&
-                    category.UserId == BoolieUserId))
+                    category.UserId == CurrentUserId))
             {
                 ModelState.AddModelError(
                     nameof(viewModel.CategoryId),
@@ -210,7 +211,7 @@ namespace DohFlo.Controllers
             viewModel.Accounts = await _db.Accounts
                 .AsNoTracking()
                 .Where(account =>
-                    account.UserId == BoolieUserId &&
+                    account.UserId == CurrentUserId &&
                     (!account.IsClosed ||
                      account.Id == currentAccountId))
                 .OrderBy(account => account.Name)
@@ -223,7 +224,7 @@ namespace DohFlo.Controllers
 
             viewModel.Payees = await _db.Payees
                 .AsNoTracking()
-                .Where(payee => payee.UserId == BoolieUserId)
+                .Where(payee => payee.UserId == CurrentUserId)
                 .OrderBy(payee => payee.Name)
                 .Select(payee => new SelectListItem
                 {
@@ -235,7 +236,7 @@ namespace DohFlo.Controllers
             viewModel.Categories = await _db.Categories
                 .AsNoTracking()
                 .Where(category =>
-                    category.UserId == BoolieUserId)
+                    category.UserId == CurrentUserId)
                 .OrderBy(category => category.Name)
                 .Select(category => new SelectListItem
                 {
@@ -261,7 +262,7 @@ namespace DohFlo.Controllers
         {
             if (vm.PayeeId.HasValue && !await _db.Payees.AnyAsync(payee =>
                 payee.Id == vm.PayeeId.Value &&
-                payee.UserId == BoolieUserId))
+                payee.UserId == CurrentUserId))
             {
                 ModelState.AddModelError(
                     nameof(vm.PayeeId),
@@ -270,7 +271,7 @@ namespace DohFlo.Controllers
 
             if (vm.CategoryId.HasValue && !await _db.Categories.AnyAsync(category =>
                     category.Id == vm.CategoryId.Value &&
-                    category.UserId == BoolieUserId))
+                    category.UserId == CurrentUserId))
             {
                 ModelState.AddModelError(
                     nameof(vm.CategoryId),
@@ -280,7 +281,7 @@ namespace DohFlo.Controllers
             //The server side validation can't trust the dropdown alone
             if (vm.AccountId > 0 && !await _db.Accounts.AnyAsync(account =>
             account.Id == vm.AccountId &&
-            account.UserId == BoolieUserId &&
+            account.UserId == CurrentUserId &&
             !account.IsClosed))
             {
                 ModelState.AddModelError(nameof(vm.AccountId), "Please select a valid open account.");
@@ -302,7 +303,7 @@ namespace DohFlo.Controllers
 
             var tx = new Transaction
             {
-                UserId = BoolieUserId,
+                UserId = CurrentUserId,
                 AccountId = vm.AccountId,
                 PayeeId = vm.PayeeId,
                 CategoryId = vm.CategoryId, // null is Ok when you'll add splits
@@ -331,7 +332,7 @@ namespace DohFlo.Controllers
             var transaction = await _db.Transactions
                 .FirstOrDefaultAsync(transaction =>
                     transaction.Id == id &&
-                    transaction.UserId == BoolieUserId &&
+                    transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted);
 
             if (transaction is null)
@@ -364,7 +365,7 @@ namespace DohFlo.Controllers
             var transaction = await _db.Transactions
                 .FirstOrDefaultAsync(transaction =>
                     transaction.Id == id &&
-                    transaction.UserId == BoolieUserId &&
+                    transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted);
 
             if (transaction is null)
@@ -416,19 +417,19 @@ namespace DohFlo.Controllers
         private async Task PopulateLists(CreateTransactionViewModel vm)
         {
             vm.Accounts = await _db.Accounts
-                .Where(a => a.UserId == BoolieUserId && !a.IsClosed)
+                .Where(a => a.UserId == CurrentUserId && !a.IsClosed)
                 .OrderBy(a => a.Name)
                 .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name })
                 .ToListAsync();
 
             vm.Payees = await _db.Payees
-                .Where(p => p.UserId == BoolieUserId)
+                .Where(p => p.UserId == CurrentUserId)
                 .OrderBy(p => p.Name)
                 .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Name })
                 .ToListAsync();
 
             vm.Categories = await _db.Categories
-                .Where(c => c.UserId == BoolieUserId)
+                .Where(c => c.UserId == CurrentUserId)
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
                 .ToListAsync();

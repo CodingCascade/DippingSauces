@@ -1,0 +1,93 @@
+﻿@model DohFlo.Models.Admin.CreateAccountUserViewModel
+
+@{
+    ViewData["Title"] = "Create Account User";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h1 class="h3 mb-3">Create Account User</h1>
+
+        <div class="alert alert-info">
+            <strong>This feature is for the Admin only.</strong>
+        </div>
+
+        <form asp-controller="AccountUsers"
+              asp-action="Create"
+              method="post"
+              asp-antiforgery="true">
+
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3"
+                 role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email"
+                       type="email"
+                       class="form-control"
+                       autocomplete="off" />
+                <span asp-validation-for="Email"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DisplayName" class="form-label"></label>
+                <input asp-for="DisplayName"
+                       class="form-control"
+                       maxlength="150" />
+                <span asp-validation-for="DisplayName"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="Password" type="password" class="form-control"
+                           autocomplete="new-password" aria-describedby="passwordHelp" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-password-toggle="Password" aria-controls="Password"
+                            aria-label="Show password" aria-pressed="false" title="Show password">
+                        <i class="bi bi-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div id="passwordHelp" class="form-text">
+                    Use at least 12 characters, including an uppercase
+                    letter, a lowercase letter, a number, and a symbol.
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control"
+                           autocomplete="new-password" />
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-password-toggle="ConfirmPassword" aria-controls="ConfirmPassword"
+                            aria-label="Show password" aria-pressed="false" title="Show password">
+                        <i class="bi bi-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Create User
+                </button>
+
+                <a asp-controller="AccountUsers"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

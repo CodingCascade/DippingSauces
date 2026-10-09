@@ -2,13 +2,14 @@
 using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DohFlo.Security;
 
 namespace DohFlo.Controllers
 {
     public class PayeesController : Controller
     {
         private readonly DohFloContext _db;
-        private const int BoolieUserId = 1;
+        private int CurrentUserId => FinanceAccess.GetUserId(User);
 
         private readonly ILogger<PayeesController> _logger;
 
@@ -23,7 +24,7 @@ namespace DohFlo.Controllers
         {
             var payees = await _db.Payees
                 .AsNoTracking()
-                .Where(payee => payee.UserId == BoolieUserId)
+                .Where(payee => payee.UserId == CurrentUserId)
                 .OrderBy(payee => payee.Name)
                 .ToListAsync();
 
@@ -47,7 +48,7 @@ namespace DohFlo.Controllers
             var normalizedName = name.ToUpperInvariant();
 
             var duplicateExists = await _db.Payees.AnyAsync(payee =>
-                payee.UserId == BoolieUserId &&
+                payee.UserId == CurrentUserId &&
                 payee.NormalizedName == normalizedName);
 
             if (duplicateExists)
@@ -59,7 +60,7 @@ namespace DohFlo.Controllers
 
             var payee = new Payee
             {
-                UserId = BoolieUserId,
+                UserId = CurrentUserId,
                 Name = name,
                 NormalizedName = normalizedName
             };
@@ -79,7 +80,7 @@ namespace DohFlo.Controllers
                 .AsNoTracking()
                 .SingleOrDefaultAsync(payee =>
                     payee.Id == id &&
-                    payee.UserId == BoolieUserId);
+                    payee.UserId == CurrentUserId);
 
             if (payee is null)
             {
@@ -116,7 +117,7 @@ namespace DohFlo.Controllers
 
             var payee = await _db.Payees.SingleOrDefaultAsync(payee =>
                 payee.Id == id &&
-                payee.UserId == BoolieUserId);
+                payee.UserId == CurrentUserId);
 
             if (payee is null)
             {
@@ -129,7 +130,7 @@ namespace DohFlo.Controllers
             var normalizedName = name.ToUpperInvariant();
 
             var duplicateExists = await _db.Payees.AnyAsync(other =>
-                other.UserId == BoolieUserId &&
+                other.UserId == CurrentUserId &&
                 other.Id != id &&
                 other.NormalizedName == normalizedName);
 
@@ -156,7 +157,7 @@ namespace DohFlo.Controllers
         {
             var payee = await _db.Payees.SingleOrDefaultAsync(payee =>
                 payee.Id == id &&
-                payee.UserId == BoolieUserId);
+                payee.UserId == CurrentUserId);
 
             if (payee is null)
             {

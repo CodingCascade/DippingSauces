@@ -3,13 +3,14 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using DohFlo.Security;
 
 namespace DohFlo.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly DohFloContext _db;
-        private const int BoolieUserId = 1;
+        private int CurrentUserId => FinanceAccess.GetUserId(User);
         private readonly ILogger<CategoriesController> _logger;
 
         public CategoriesController(DohFloContext db, ILogger<CategoriesController> logger)
@@ -24,7 +25,7 @@ namespace DohFlo.Controllers
             var categories = await _db.Categories
                 .AsNoTracking()
                 .Include(category => category.ParentCategory)
-                .Where(category => category.UserId == BoolieUserId)
+                .Where(category => category.UserId == CurrentUserId)
                 .OrderBy(category => category.CatType)
                 .ThenBy(category => category.Name)
                 .ToListAsync();
@@ -37,7 +38,7 @@ namespace DohFlo.Controllers
             viewModel.ParentCategories = await _db.Categories
                 .AsNoTracking()
                 .Where(category =>
-                    category.UserId == BoolieUserId &&
+                    category.UserId == CurrentUserId &&
                     category.ParentCategoryId == null &&
                     (!excludeId.HasValue || category.Id != excludeId.Value))
                 .OrderBy(category => category.Name)
@@ -67,7 +68,7 @@ namespace DohFlo.Controllers
             {
                 var validParent = await _db.Categories.AnyAsync(category =>
                     category.Id == viewModel.ParentCategoryId.Value &&
-                    category.UserId == BoolieUserId &&
+                    category.UserId == CurrentUserId &&
                     category.ParentCategoryId == null);
 
                 if (!validParent)
@@ -87,7 +88,7 @@ namespace DohFlo.Controllers
             var name = viewModel.Name.Trim();
 
             var duplicateExists = await _db.Categories.AnyAsync(category =>
-                category.UserId == BoolieUserId &&
+                category.UserId == CurrentUserId &&
                 category.Name == name);
 
             if (duplicateExists)
@@ -101,7 +102,7 @@ namespace DohFlo.Controllers
 
             var category = new Category
             {
-                UserId = BoolieUserId,
+                UserId = CurrentUserId,
                 Name = name,
                 CatType = viewModel.CatType,
                 ParentCategoryId = viewModel.ParentCategoryId
@@ -123,7 +124,7 @@ namespace DohFlo.Controllers
                 .AsNoTracking()
                 .SingleOrDefaultAsync(category =>
                 category.Id == id &&
-                category.UserId == BoolieUserId);
+                category.UserId == CurrentUserId);
 
             if (category is null)
             {
@@ -158,7 +159,7 @@ namespace DohFlo.Controllers
 
             var category = await _db.Categories.SingleOrDefaultAsync(category =>
                 category.Id == id &&
-                category.UserId == BoolieUserId);
+                category.UserId == CurrentUserId);
 
             if (category is null)
             {
@@ -171,7 +172,7 @@ namespace DohFlo.Controllers
             {
                 var validParent = await _db.Categories.AnyAsync(parent =>
                     parent.Id == viewModel.ParentCategoryId.Value &&
-                    parent.UserId == BoolieUserId &&
+                    parent.UserId == CurrentUserId &&
                     parent.Id != id &&
                     parent.ParentCategoryId == null);
 
@@ -192,7 +193,7 @@ namespace DohFlo.Controllers
             var name = viewModel.Name.Trim();
 
             var duplicateExists = await _db.Categories.AnyAsync(other =>
-                other.UserId == BoolieUserId &&
+                other.UserId == CurrentUserId &&
                 other.Id != id &&
                 other.Name == name);
 
@@ -222,7 +223,7 @@ namespace DohFlo.Controllers
         {
             var category = await _db.Categories.SingleOrDefaultAsync(category =>
                 category.Id == id &&
-                category.UserId == BoolieUserId);
+                category.UserId == CurrentUserId);
 
             if (category is null)
             {

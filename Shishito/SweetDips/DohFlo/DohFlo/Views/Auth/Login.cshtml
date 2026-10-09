@@ -1,0 +1,43 @@
+﻿@model DohFlo.Models.Auth.LoginViewModel
+
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="mx-auto py-4" style="max-width: 440px;">
+    <h1>Sign in to DohFlo</h1>
+    <p>Use the account credentials provided to you.</p>
+
+    <form asp-controller="Auth" asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger" role="alert"></div>
+        <input asp-for="ReturnUrl" type="hidden" />
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control"
+                   autocomplete="username" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <div class="input-group">
+                <input asp-for="Password" type="password" class="form-control"
+                       autocomplete="current-password" aria-describedby="passwordHelp" />
+                <button type="button" class="btn btn-outline-secondary"
+                        data-password-toggle="Password" aria-controls="Password"
+                        aria-label="Show password" aria-pressed="false" title="Show password">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

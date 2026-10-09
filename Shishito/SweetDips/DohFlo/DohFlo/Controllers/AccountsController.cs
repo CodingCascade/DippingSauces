@@ -2,13 +2,14 @@
 using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DohFlo.Security;
 
 namespace DohFlo.Controllers
 {
     public class AccountsController : Controller
     {
         private readonly DohFloContext _db;
-        private const int BoolieUserId = 1;
+        private int CurrentUserId => FinanceAccess.GetUserId(User);
         private readonly ILogger<AccountsController> _logger;
 
         public AccountsController(DohFloContext db, ILogger<AccountsController> logger)
@@ -22,7 +23,7 @@ namespace DohFlo.Controllers
         {
             var accounts = await _db.Accounts
                 .AsNoTracking()
-                .Where(account => account.UserId == BoolieUserId)
+                .Where(account => account.UserId == CurrentUserId)
                 .OrderBy(account => account.IsClosed)
                 .ThenBy(account => account.Name)
                 .ToListAsync();
@@ -47,7 +48,7 @@ namespace DohFlo.Controllers
             var accountName = viewModel.Name.Trim();  
 
             var duplicateExists = await _db.Accounts.AnyAsync(account =>
-                account.UserId == BoolieUserId &&
+                account.UserId == CurrentUserId &&
                 account.Name == accountName);
 
             if (duplicateExists)
@@ -60,7 +61,7 @@ namespace DohFlo.Controllers
 
             var account = new Account
             {
-                UserId = BoolieUserId,
+                UserId = CurrentUserId,
                 Name = accountName,
                 Type = viewModel.Type,
                 Institution = viewModel.Institution?.Trim() ?? "",
@@ -86,7 +87,7 @@ namespace DohFlo.Controllers
                 .AsNoTracking()
                 .SingleOrDefaultAsync(account =>
                     account.Id == id &&
-                    account.UserId == BoolieUserId);
+                    account.UserId == CurrentUserId);
 
             if(account is null)
             {
@@ -127,7 +128,7 @@ namespace DohFlo.Controllers
 
             var account = await _db.Accounts.SingleOrDefaultAsync(account =>
                 account.Id == id &&
-                account.UserId == BoolieUserId);
+                account.UserId == CurrentUserId);
 
             if (account is null)
             {
@@ -139,7 +140,7 @@ namespace DohFlo.Controllers
             var accountName = viewModel.Name.Trim();
 
             var duplicateExists = await _db.Accounts.AnyAsync(other =>
-                other.UserId == BoolieUserId &&
+                other.UserId == CurrentUserId &&
                 other.Id != id &&
                 other.Name == accountName
             );
@@ -173,7 +174,7 @@ namespace DohFlo.Controllers
         {
             var account = await _db.Accounts.SingleOrDefaultAsync(account =>
                 account.Id == id &&
-                account.UserId == BoolieUserId);
+                account.UserId == CurrentUserId);
 
             if (account is null)
             {
