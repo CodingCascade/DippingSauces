@@ -3,9 +3,12 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DohFlo.Security;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DohFlo.Controllers
 {
+    [Authorize(Policy = FinanceAccess.ReadPolicy)]
     public class AccountsController : Controller
     {
         private readonly DohFloContext _db;
@@ -114,6 +117,7 @@ namespace DohFlo.Controllers
             if (id != viewModel.Id)
             {
                 _logger.LogWarning("Account edit ID mismatch. Route ID: {RouteId}, Form ID: {FormId}", id, viewModel.Id);
+                
                 return BadRequest();
             }
 

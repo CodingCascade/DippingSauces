@@ -1,4 +1,5 @@
-﻿using DohFlo.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using DohFlo.Data;
 using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,8 +8,9 @@ using DohFlo.Security;
 
 namespace DohFlo.Controllers
 {
+    [Authorize(Policy = FinanceAccess.ReadPolicy)]
     public class TransactionsController : Controller
-    {        
+    {
         private readonly DohFloContext _db;
         private int CurrentUserId => FinanceAccess.GetUserId(User);
 
@@ -22,7 +24,7 @@ namespace DohFlo.Controllers
                 .Include(transaction => transaction.Account)
                 .Include(transaction => transaction.Payee)
                 .Include(transaction => transaction.Category)
-                .Where(transaction => 
+                .Where(transaction =>
                     transaction.UserId == CurrentUserId &&
                     !transaction.IsDeleted)
                 .OrderByDescending(transaction => transaction.Date)
@@ -293,7 +295,7 @@ namespace DohFlo.Controllers
             }
 
             // Re-populate dropdowns if validation fails
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 await PopulateLists(vm);
                 return View(vm);

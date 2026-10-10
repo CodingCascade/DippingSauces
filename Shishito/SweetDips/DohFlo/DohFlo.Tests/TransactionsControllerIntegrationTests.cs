@@ -25,6 +25,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var account = new Account
             {
@@ -101,6 +102,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var account = new Account
             {
@@ -162,6 +164,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var account = new Account
             {
@@ -192,12 +195,15 @@ namespace DohFlo.Tests
             Assert.Equal(hasReconciledDate, saved.ReconciledDate.HasValue);
 
             if (status == TransactionStatus.Reconciled)
+            {
                 Assert.Equal(saved.ClearedDate, saved.ReconciledDate);
+            }
         }
 
         private static TransactionsController CreateController(DohFloContext db)
         {
             var controller = new TransactionsController(db);
+            IdentityTestHelper.SignIn(controller);
 
             controller.TempData = new TempDataDictionary(
                 new DefaultHttpContext(),

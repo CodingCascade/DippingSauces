@@ -3,9 +3,11 @@ using DohFlo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DohFlo.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DohFlo.Controllers
 {
+    [Authorize(Policy = FinanceAccess.ReadPolicy)]
     public class PayeesController : Controller
     {
         private readonly DohFloContext _db;
@@ -55,6 +57,7 @@ namespace DohFlo.Controllers
             {
                 ModelState.AddModelError(nameof(viewModel.Name),
                     "You already have a payee with this name.");
+                
                 return View(viewModel);
             }
 
@@ -103,6 +106,7 @@ namespace DohFlo.Controllers
             if (id != viewModel.Id)
             {
                 _logger.LogWarning("Payee edit ID mismatch. Route ID: {RouteId}, Payee ID: {FormId}", id, viewModel.Id);
+
                 return BadRequest();
             }
 

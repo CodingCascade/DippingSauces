@@ -23,6 +23,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var account = new Account
             {
@@ -38,6 +39,7 @@ namespace DohFlo.Tests
             await db.SaveChangesAsync();
 
             var controller = new AccountsApiController(db, NullLogger<AccountsApiController>.Instance);
+            IdentityTestHelper.SignIn(controller);
 
             var actionResult = await controller.GetById(account.Id);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -60,6 +62,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var account = new Account
             {
@@ -75,6 +78,7 @@ namespace DohFlo.Tests
             await db.SaveChangesAsync();
 
             var controller = new AccountsApiController(db, NullLogger<AccountsApiController>.Instance);
+            IdentityTestHelper.SignIn(controller);
 
             var actionResult = await controller.UpdateStatus(account.Id, new AccountStatusRequest { IsClosed = true });
 
@@ -84,7 +88,7 @@ namespace DohFlo.Tests
             Assert.True(dto.IsClosed);
             Assert.Equal(1, await db.Accounts.CountAsync());
             Assert.True((await db.Accounts.SingleAsync()).IsClosed);
-        } 
-        
+        }
+
     }
 }

@@ -3,9 +3,12 @@ using DohFlo.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DohFlo.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DohFlo.Controllers.Api
 {
+    [Authorize(Policy = FinanceAccess.ReadPolicy)]
+    [AutoValidateAntiforgeryToken]
     [ApiController]
     [Route("api/accounts")]
     public class AccountsApiController : ControllerBase

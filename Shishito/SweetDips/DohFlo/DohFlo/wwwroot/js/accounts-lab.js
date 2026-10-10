@@ -31,7 +31,7 @@ createApp({
                 });
 
                 if (!response.ok) {
-                    throw new error(`The API returned status ${response.status}.`);
+                    throw new Error(`The API returned status ${response.status}.`);
                 }
 
                 const data = await response.json();
@@ -52,10 +52,25 @@ createApp({
             this.errorMessage = "";
 
             try {
+                const tokenResponse = await fetch("/api/security/antiforgery", {
+                    headers: { "Accept": "application/json" }
+                });
+
+                if (!tokenResponse.ok) {
+                    throw new Error(`Could not get the antiforgery token: ${tokenResponse.status}.`);
+                }
+
+                const tokens = await tokenResponse.json();
+
+                if (!tokens.requestToken) {
+                    throw new Error("The antiforgery token is missing.");
+                }
+
                 const response = await fetch(`/api/accounts/${account.id}/status`,
                     {
                         method: "PATCH",
                         headers: {
+                            "X-CSRF-TOKEN": tokens.requestToken,
                             "Content-Type": "application/json",
                             "Accept": "application/json"
                         },
@@ -65,7 +80,7 @@ createApp({
                     });
 
                 if (!response.ok) {
-                    throw new error(`The API returned status ${response.status}.`);
+                    throw new Error(`The API returned status ${response.status}.`);
                 }
 
                 const updatedAccount = await response.json();

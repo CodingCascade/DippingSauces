@@ -38,6 +38,7 @@ namespace DohFlo.Tests
 
             await using var db = new DohFloContext(options);
             await db.Database.EnsureCreatedAsync();
+            await IdentityTestHelper.SeedAdminAsync(db);
 
             var originalName = "Primary Checking";
 
@@ -54,6 +55,7 @@ namespace DohFlo.Tests
             await db.SaveChangesAsync();
 
             var controller = new AccountsController(db, NullLogger<AccountsController>.Instance);
+            IdentityTestHelper.SignIn(controller);
 
             // Initialize TempData because the ToggleClosed() uses it.
             controller.TempData = new TempDataDictionary(new DefaultHttpContext(), new FakeTempDataProvider());
@@ -72,6 +74,6 @@ namespace DohFlo.Tests
             Assert.Equal(1, await db.Accounts.CountAsync());
         }
 
-        
+
     }
 }

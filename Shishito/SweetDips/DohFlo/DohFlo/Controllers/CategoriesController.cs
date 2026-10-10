@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DohFlo.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DohFlo.Controllers
 {
+    [Authorize(Policy = FinanceAccess.ReadPolicy)]
     public class CategoriesController : Controller
     {
         private readonly DohFloContext _db;
