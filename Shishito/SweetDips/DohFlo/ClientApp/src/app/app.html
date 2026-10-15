@@ -1,0 +1,122 @@
+<main class="dashboard">
+  <header class="brand-bar">
+    <a href="/" class="brand"><i class="bi bi-graph-up" aria-hidden="true"></i> DohFlo</a>
+    <a href="/" aria-label="Home and account menu">
+      <i class="bi bi-person-circle" aria-hidden="true"></i>
+    </a>
+  </header>
+  <section class="body">
+    <div class="toolbar">
+      <div><h1>Dashboard</h1><p>Your recorded financial activity</p></div>
+      <div class="filters">
+        <label>
+          Month
+          <input type="month" [ngModel]="month()"
+                 (ngModelChange)="month.set($event)" min="2000-01" max="2100-12">
+        </label>
+        <label>
+          Currency
+          <select [ngModel]="currency()" (ngModelChange)="currency.set($event)">
+            <option>USD</option>
+            <option>EUR</option>
+          </select>
+        </label>
+        <button (click)="load()" [disabled]="loading() || !month()">Apply</button>
+      </div>
+    </div>
+    @if (loading()) { <p role="status">Loading your dashboard...</p> }
+    @if (error()) {
+    <p role="alert" class="error">{{ error() }}</p>
+    @if (signedOut()) {
+    <a href="/Auth/Login?ReturnUrl=%2Fdashboard%2F">Sign in</a>
+    }
+    }
+    @if (data(); as d) {
+    <div class="summary-grid">
+      <section class="card summary">
+        <h2>Recorded Net Balance</h2>
+        <strong>{{ d.recordedBalance | currency:d.currency:'symbol':'1.2-2' }}</strong>
+        <app-chart [labels]="labels()" [values]="balanceValues()"
+                   description="Recorded net balance through each day of the selected month" />
+        <small>Through month end; opening balances excluded</small>
+      </section>
+      <section class="card summary">
+        <h2>Income</h2>
+        <strong>{{ d.income | currency:d.currency:'symbol':'1.2-2' }}</strong>
+        <app-chart [labels]="labels()" [values]="incomeValues()" [colors]="['#009d25']"
+                   description="Cumulative income during the selected month" />
+        <small>Selected month</small>
+      </section>
+      <section class="card summary">
+        <h2>Expenses</h2>
+        <strong>{{ d.expenses | currency:d.currency:'symbol':'1.2-2' }}</strong>
+        <app-chart [labels]="labels()" [values]="expenseValues()" [colors]="['#ff4253']"
+                   description="Cumulative expenses during the selected month" />
+        <small>Selected month</small>
+      </section>
+    </div>
+    <div class="detail-grid">
+      <section class="card">
+        <h2>Recent Transactions</h2>
+        <ul class="transactions">
+          @for (t of d.recent; track t.id) {
+          <li>
+            <span class="transaction-icon" [class.income]="t.kind === 'Income'">
+              <i [class]="'bi ' + icon(t.kind)" aria-hidden="true"></i>
+            </span>
+            <span class="transaction-name">{{ t.name }}<small>{{ t.date | date:'MMM d' }}</small></span>
+            <span class="amount" [class.positive]="t.signedAmount > 0">
+              @if (t.kind === 'Transfer') { ↔ {{ t.amount | currency:d.currency }} }
+              @else {
+              {{ t.signedAmount > 0 ? '+' : '' }}{{ t.signedAmount | currency:d.currency }}
+              }
+              @if (t.kind === 'Mixed') { <small>Mixed split net</small> }
+            </span>
+          </li>
+          } @empty {
+          <li>No transactions for this month and currency.</li> }
+        </ul>
+        <a class="more" href="/Transactions">View all transactions <span aria-hidden="true">›</span></a>
+      </section>
+      <section class="card" id="spending">
+        <h2>Spending Overview</h2>
+        @if (d.expenses > 0) {
+        <div class="spending-grid">
+          <div class="donut">
+            <app-chart kind="doughnut" [labels]="spendingLabels()"
+                       [values]="spendingValues()" [colors]="spendingColors()"
+                       description="Spending by category with amounts in the adjacent list" />
+            <div class="donut-center">
+              <strong>{{ d.expenses | currency:d.currency }}</strong><span>Total</span>
+            </div>
+          </div>
+          <ul class="legend">
+            @for (s of d.spending; track s.name; let i = $index) {
+            <li>
+              <span class="dot" [style.background]="color(i)"></span>
+              <span>{{ s.name }}<small>{{ s.amount | currency:d.currency }}</small></span>
+              <b>{{ s.amount / d.expenses * 100 | number:'1.0-1' }}%</b>
+            </li>
+            }
+          </ul>
+        </div>
+        } @else { <p>No expenses for this month and currency.</p> }
+        <a class="more" href="/Transactions">View transaction details <span aria-hidden="true">›</span></a>
+      </section>
+    </div>
+    <p class="note">
+      Includes pending, cleared, and reconciled records. Transfers are excluded
+      from income and expenses. Currency totals are separate.
+    </p>
+    @if (d.unclassifiedCount > 0) {
+    <p class="note">
+      {{ d.unclassifiedCount }} uncategorized record(s) are counted as expenses.
+      Categorize salary and other income to keep these totals accurate.
+    </p>
+    }
+    <nav class="bottom-nav" aria-label="Financial pages">
+      <a href="/Transactions">Transactions</a><a href="/Accounts">Accounts</a><a href="/">Home</a>
+    </nav>
+    }
+  </section>
+</main>

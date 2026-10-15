@@ -34,6 +34,11 @@
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/dashboard/">
+                                    <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>Dashboard
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <button class="nav-link dropdown-toggle" id="transactions-menu" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-cash-stack me-1" aria-hidden="true"></i>Transactions
@@ -50,7 +55,8 @@
                                 <ul class="dropdown-menu" aria-labelledby="transaction-settings-menu">
                                     <li><a class="dropdown-item" asp-controller="Accounts" asp-action="Index"><i class="bi bi-wallet2 me-2" aria-hidden="true"></i>Accounts</a></li>
                                     <li><a class="dropdown-item" asp-controller="Categories" asp-action="Index"><i class="bi bi-tags me-2" aria-hidden="true"></i>Categories</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Payees" asp-action="Index">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Payees" asp-action="Index">
                                             <i class="bi bi-person-vcard me-2" aria-hidden="true"></i>Payees
                                         </a>
                                     </li>

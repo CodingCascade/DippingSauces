@@ -5,3 +5,11 @@
 *.log
 bin/
 obj/
+
+# Generated Angular dashboard and publish output
+ClientApp/node_modules/
+ClientApp/dist/
+ClientApp/.angular/
+DohFlo/wwwroot/dashboard/
+DohFlo/DashboardAssets/
+artifacts/
