@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="DashboardAssets/index.html"
-             Condition="Exists('DashboardAssets/index.html')"
+    <Content Update="DashboardAssets/dashboard-assets.json"
              CopyToOutputDirectory="PreserveNewest"
              CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>

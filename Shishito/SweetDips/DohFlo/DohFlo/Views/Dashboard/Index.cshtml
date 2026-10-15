@@ -1,0 +1,28 @@
+﻿@model DohFlo.ViewModels.DashboardAssetsViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    @foreach (var stylesheet in Model.Stylesheets)
+    {
+        <link rel="stylesheet" href="@Url.Content("~/dashboard/" + stylesheet)" />
+    }
+}
+
+<app-root>
+    <p role="status">Loading your dashboard...</p>
+</app-root>
+
+<noscript>
+    <p>Please enable JavaScript to view the dashboard charts.</p>
+</noscript>
+
+@section Scripts {
+    @foreach (var script in Model.Scripts)
+    {
+        <script type="module" src="@Url.Content("~/dashboard/" + script)"></script>
+    }
+}
