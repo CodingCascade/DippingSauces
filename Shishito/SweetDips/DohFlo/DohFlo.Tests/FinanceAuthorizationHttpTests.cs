@@ -33,6 +33,8 @@ namespace DohFlo.Tests
         [InlineData("/Payees")]
         [InlineData("/AccountsLab")]
         [InlineData("/api/accounts")]
+        [InlineData("/api/dashboard?month=2026-10&currency=USD")]
+        [InlineData("/dashboard/")]
         public async Task Anonymous_CannotReadFinanceData(string path)
         {
             using var client = _factory.NewClient();
@@ -50,6 +52,7 @@ namespace DohFlo.Tests
         [InlineData("/Transactions/Create")]
         [InlineData("/Categories/Create")]
         [InlineData("/Payees/Create")]
+        [InlineData("/api/dashboard?month=2026-10&currency=USD")]
         public async Task StandardUser_CanReadFinancePagesAndCreateForms(string path)
         {
             using var client = _factory.NewClient("standard");

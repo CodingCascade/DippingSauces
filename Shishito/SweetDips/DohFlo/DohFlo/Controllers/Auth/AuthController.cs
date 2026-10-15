@@ -58,7 +58,7 @@ namespace DohFlo.Controllers.Auth
                     return LocalRedirect(model.ReturnUrl);
                 }
                     
-                return RedirectToAction("Index", "Accounts");
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError(string.Empty, "Sign-in failed. Please check your credentials or try again later.");
