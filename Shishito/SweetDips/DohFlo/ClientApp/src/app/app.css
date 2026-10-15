@@ -1,44 +1,25 @@
+/* The MVC shared layout supplies Bootstrap Icons and page-wide styles.
+   Keep dashboard styling inside src/app/app.css. */
+
 :host {
   display: block;
   color: #15183e;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
-.dashboard {
-  max-width: 1160px;
-  margin: 28px auto;
-  border: 1px solid #e1e4e8;
-  border-radius: 24px;
-  padding: 12px;
-  background: white;
-  box-shadow: 0 8px 28px #17253b16;
-}
-
-.brand-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #00989f;
-  padding: 24px 30px;
-  border-radius: 17px 17px 0 0;
-}
-
-  .brand-bar a {
-    color: white;
-    text-decoration: none;
-    font-size: 34px;
+  :host, :host *, :host *::before, :host *::after {
+    box-sizing: border-box;
   }
 
-.brand {
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 22px;
+.dashboard {
+  width: 100%;
+  margin: 0;
 }
 
 .body {
-  padding: 26px;
-  background: #fcfdff;
-  border-radius: 0 0 17px 17px;
+  padding: 12px 0 24px;
 }
 
 .toolbar {
@@ -107,6 +88,7 @@ button {
 }
 
 .card {
+  display: block;
   border: 1px solid #e4e7ee;
   border-radius: 15px;
   padding: 24px;
@@ -157,9 +139,9 @@ ul {
   font-size: 25px;
 }
 
-  .transaction-icon.income {
-    background: #2864ff;
-  }
+.transaction-icon.income {
+  background: #2864ff;
+}
 
 .transaction-name {
   flex: 1;
@@ -236,6 +218,7 @@ ul {
 }
 
 .note {
+  margin-top: 20px;
   color: #61667c;
   font-size: 13px;
   line-height: 1.5;
@@ -244,16 +227,6 @@ ul {
 .error {
   color: #a1202e;
 }
-
-.bottom-nav {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-  .bottom-nav a {
-    color: #205bdf;
-  }
 
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 3px solid #ffb326;
@@ -267,26 +240,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 @media (max-width: 680px) {
-  .dashboard {
-    margin: 10px;
-    padding: 7px;
-  }
-
   .body {
-    padding: 16px;
+    padding: 8px 0 20px;
   }
 
   .summary-grid, .spending-grid {
     grid-template-columns: 1fr;
   }
 
-  .brand-bar {
-    padding: 18px;
-  }
-
-    .brand-bar a {
-      font-size: 28px;
-    }
 
   .card {
     padding: 18px;

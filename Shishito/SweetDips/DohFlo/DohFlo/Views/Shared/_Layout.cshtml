@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/DohFlo.styles.css" asp-append-version="true" />
     <link rel="icon" type="image/png" href="~/images/DohFlo-icon.png" />
     <link rel="icon" type="image/x-icon" href="~/images/DohFlo-favicon.ico" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
