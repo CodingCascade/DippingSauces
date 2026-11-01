@@ -1,10 +1,63 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Shopping List";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <h1>Shopping List</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <p role="status">@Model.Message</p>
+    }
+
+    <form method="post" asp-page-handler="Add">
+        <label asp-for="ItemName">Item Name</label>
+        <input asp-for="ItemName" maxlength="80" />
+        <button type="submit">Add Item</button>
+    </form>
+    <hr />
+    @if (Model.Items.Count == 0)
+    {
+        <p>Your list is empty. Add your first item above.</p>
+    }
+    else
+    {
+    <ul class="shopping-items">
+        @foreach (var item in Model.Items)
+        {
+            <li>
+                <form method="post"
+                      asp-page-handler="SetPurchased">
+                    <input type="hidden" name="id"
+                           value="@item.Id" />
+                    <input type="checkbox" name="purchased"
+                           id="purchased-@item.Id"
+                           value="true"
+                           checked="@item.IsPurchased" />
+                    <input type="hidden" name="purchased"
+                           value="false" />
+                    <label for="purchased-@item.Id"
+                           class="@(item.IsPurchased
+                                     ? "purchased" : "")">
+                        @item.Name
+                        <span>
+                            @(item.IsPurchased
+                                ? "(purchased)" : "(needed)")
+                        </span>
+                    </label>
+                    <button type="submit">Update</button>
+                </form>
+
+                <form method="post" asp-page-handler="Remove">
+                    <input type="hidden" name="id"
+                           value="@item.Id" />
+                    <button type="submit"
+                            aria-label="Remove @item.Name">
+                        Remove
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+}

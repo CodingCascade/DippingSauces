@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="DippingList.Tests/DippingList.Tests.csproj" />
   <Project Path="DippingList/DippingList.csproj" />
 </Solution>
