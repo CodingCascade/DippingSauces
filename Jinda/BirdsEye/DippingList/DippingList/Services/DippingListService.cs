@@ -42,7 +42,7 @@ namespace DippingList.Services
             // Assumption: 80-character limit is a reasonable constraint for UI/display
             if (cleanedName.Length > 80)
             {
-                throw new ArgumentException("Use 80 characters of fewer.", nameof(name));
+                throw new ArgumentException("Use 80 characters or fewer.", nameof(name));
             }
 
             lock (_gate)
