@@ -1,0 +1,113 @@
+name: DohFlo build and deploy
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Shishito/SweetDips/DohFlo/**'
+      - '.github/workflows/dohflo.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'Shishito/SweetDips/DohFlo/**'
+      - '.github/workflows/dohflo.yml'
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy the tested app to the DohFlo hosting site'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dohflo-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOHFLO_ROOT: Shishito/SweetDips/DohFlo
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-test-deploy:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Validate deployment script syntax
+        shell: powershell
+        run: |
+          $tokens = $null
+          $errors = $null
+          $null = [System.Management.Automation.Language.Parser]::ParseFile(
+            "$env:GITHUB_WORKSPACE/$env:DOHFLO_ROOT/deployment/Deploy-DohFlo.ps1",
+            [ref]$tokens, [ref]$errors)
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Host $_.Message }
+            exit 1
+          }
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.x'
+          cache: npm
+          cache-dependency-path: Shishito/SweetDips/DohFlo/ClientApp/package-lock.json
+
+      - name: Install dashboard dependencies
+        working-directory: ${{ env.DOHFLO_ROOT }}/ClientApp
+        run: npm ci
+
+      - name: Build and copy Angular dashboard
+        working-directory: ${{ env.DOHFLO_ROOT }}/ClientApp
+        run: npm run build:dashboard
+
+      - name: Restore .NET solution
+        working-directory: ${{ env.DOHFLO_ROOT }}
+        run: dotnet restore DohFlo.slnx
+
+      - name: Build .NET solution
+        working-directory: ${{ env.DOHFLO_ROOT }}
+        run: dotnet build DohFlo.slnx --configuration Release --no-restore
+
+      - name: Run xUnit tests
+        working-directory: ${{ env.DOHFLO_ROOT }}
+        run: dotnet test DohFlo.Tests/DohFlo.Tests.csproj --configuration Release --no-build --no-restore
+
+      - name: Publish Windows app
+        working-directory: ${{ env.DOHFLO_ROOT }}
+        run: >-
+          dotnet publish DohFlo/DohFlo.csproj --configuration Release
+          --runtime win-x64 --self-contained true
+          -p:AspNetCoreHostingModel=OutOfProcess
+          --output "${{ runner.temp }}/dohflo-publish"
+
+      - name: Check database and deploy
+        if: github.event_name == 'workflow_dispatch' && inputs.deploy && github.ref == 'refs/heads/master'
+        shell: powershell
+        env:
+          DOHFLO_DEPLOY_URL: ${{ secrets.DOHFLO_DEPLOY_URL }}
+          DOHFLO_DEPLOY_SITE: ${{ secrets.DOHFLO_DEPLOY_SITE }}
+          DOHFLO_DEPLOY_USERNAME: ${{ secrets.DOHFLO_DEPLOY_USERNAME }}
+          DOHFLO_DEPLOY_PASSWORD: ${{ secrets.DOHFLO_DEPLOY_PASSWORD }}
+          DOHFLO_DB_CONNECTION: ${{ secrets.DOHFLO_DB_CONNECTION }}
+        run: >-
+          & "$env:DOHFLO_ROOT/deployment/Deploy-DohFlo.ps1"
+          -PublishDirectory "$env:RUNNER_TEMP/dohflo-publish"
+
+      - name: Clean generated production configuration
+        if: always()
+        shell: pwsh
+        run: Remove-Item "$env:RUNNER_TEMP/dohflo-publish/appsettings.Production.json" -Force -ErrorAction SilentlyContinue
